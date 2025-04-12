@@ -86,4 +86,8 @@ public abstract class User {
         return hasUppercase&&hasDigit&&hasLowercase&&hasSpecialCharacter;
     }
 
+    public String toString(){
+        return name+"("+email+","+password+")";
+    }
+
 }
