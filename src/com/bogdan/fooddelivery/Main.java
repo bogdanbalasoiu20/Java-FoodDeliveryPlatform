@@ -1,8 +1,14 @@
 package com.bogdan.fooddelivery;
+import model.Product;
 import model.User;
 import model.Client;
+import model.Order;
 import model.Admin;
+import model.Restaurant;
+import service.OrderService;
 import service.UserService;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class Main {
@@ -16,7 +22,19 @@ public class Main {
         userService.login("balasoiu.bogdan@gmail.com","Aa$123Aa");
         System.out.println(userService.getCurrentUser());
         userService.getCurrentUser().showProfile();
-        userService.logout();
-        userService.logout();
+
+        User current_user=userService.getCurrentUser();
+        OrderService orderService=new OrderService();
+
+        List<Product> products=new ArrayList<>();
+        products.add(new Product("pizza","adcsdcs",35,2));
+        products.add(new Product("paste","sadcs",23,1));
+
+        Order order1 = new Order(current_user,new Restaurant("Restaurant1","Bucuresti","dsqsfce","08799199"),products);
+        Order order2 = new Order(current_user,new Restaurant("Restaurant2","Bucuresti","dsqsfce","08799199"),products);
+        orderService.placeOrder(current_user,order1);
+        orderService.placeOrder(current_user,order2);
+
+        orderService.showOrdersPerUser(current_user);
     }
 }

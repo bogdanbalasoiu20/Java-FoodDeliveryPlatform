@@ -95,4 +95,17 @@ public abstract class User {
         return name+"("+email+","+password+")";
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(this==o) return true;
+        if(!(o instanceof User)) return false;
+        User u=(User) o;
+        return email.equalsIgnoreCase(u.email);
+    }
+
+    @Override
+    public int hashCode(){
+        return email.toLowerCase().hashCode();
+    }
+
 }

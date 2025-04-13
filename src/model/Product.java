@@ -37,6 +37,6 @@ public class Product {
     }
 
     public String toString(){
-        return name+"-"+price+" lei";
+        return name+"-"+price+" lei (x"+quantity+")";
     }
 }
