@@ -41,7 +41,7 @@ public class UserService {
         for (User user : users) {
             if (user.getEmail().equalsIgnoreCase(email)) {
                 if (user.getPassword().equals(password)) {
-                    System.out.println("You have successfully logged in");
+                    System.out.println("Hello, "+user.getName()+"! You have successfully logged in");
                     current_user=user;
                     return user;
                 } else {
@@ -52,6 +52,17 @@ public class UserService {
         }
         System.out.println("Invalid email address ");
         return null;
+    }
+
+    public void logout(){
+        if(current_user!=null){
+            System.out.println("You have successfully logged out! See you next time, "+current_user.getName()+"!");
+            current_user=null;
+        }
+        else{
+            System.out.println("No user logged in");
+        }
+
     }
 
     //see users list

@@ -16,5 +16,7 @@ public class Main {
         userService.login("balasoiu.bogdan@gmail.com","Aa$123Aa");
         System.out.println(userService.getCurrentUser());
         userService.getCurrentUser().showProfile();
+        userService.logout();
+        userService.logout();
     }
 }
