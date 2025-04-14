@@ -23,7 +23,7 @@ public class Order {
         this.status="Pending";
     }
 
-    private double sumToPay(){
+    public double sumToPay(){
         double total=0;
         for(Product p:products){
             total+=p.getPrice()*p.getQuantity();
@@ -41,6 +41,10 @@ public class Order {
 
     public void setStatus(String status){
         this.status=status;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
     }
 
 

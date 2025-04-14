@@ -1,10 +1,5 @@
 package com.bogdan.fooddelivery;
-import model.Product;
-import model.User;
-import model.Client;
-import model.Order;
-import model.Admin;
-import model.Restaurant;
+import model.*;
 import service.OrderService;
 import service.UserService;
 import java.util.List;
@@ -36,5 +31,8 @@ public class Main {
         orderService.placeOrder(current_user,order2);
 
         orderService.showOrdersPerUser(current_user);
+
+        Payment p=new Payment(order1,PaymentMethod.CARD);
+        p.paymentDetails();
     }
 }
