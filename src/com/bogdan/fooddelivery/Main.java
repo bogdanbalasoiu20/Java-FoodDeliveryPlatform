@@ -34,5 +34,9 @@ public class Main {
 
         Payment p=new Payment(order1,PaymentMethod.CARD);
         p.paymentDetails();
+
+
+        ReviewRestaurant review1= new ReviewRestaurant(current_user,new Restaurant("Restaurant1","Bucuresti","dsqsfce","08799199"),"foarte bun",5);
+        review1.showReview();
     }
 }

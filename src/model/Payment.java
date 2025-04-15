@@ -44,6 +44,6 @@ public class Payment {
         System.out.println("Order number: "+order.getId());
         String[] date_time=paymentDate.toString().split("T");
         String[] hour=date_time[1].split("\\.");
-        System.out.println("payment date: "+date_time[0]+" "+hour[0]);
+        System.out.println("payment date: "+date_time[0]+" "+hour[0]+"\n");
     }
 }
