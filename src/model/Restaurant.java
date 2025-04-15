@@ -48,4 +48,24 @@ public class Restaurant {
     public String toString(){
         return name;
     }
+
+    public void showDetails(){
+        System.out.println(name);
+        System.out.println(city);
+        System.out.println(address);
+        System.out.println(phoneNumber);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o==this) return true;
+        if(!(o instanceof Restaurant)) return false;
+        Restaurant r=(Restaurant)o;
+        return r.getName().equals(this.name);
+    }
+
+    @Override
+    public int hashCode(){
+        return this.name.hashCode();
+    }
 }

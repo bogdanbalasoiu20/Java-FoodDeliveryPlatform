@@ -3,6 +3,7 @@ import model.*;
 import service.OrderService;
 import service.UserService;
 import service.ReviewRestaurantService;
+import service.RestaurantService;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class Main {
 
         Restaurant restaurant1 = new Restaurant("Restaurant1","Bucuresti","dsqsfce","08799199");
         Restaurant restaurant2 = new Restaurant("Restaurant2","Bucuresti","dsqsfce","08799199");
+        Restaurant restaurant3 = new Restaurant("Pizzerie","Bucuresti","dsqsfce","08799199");
 
         ReviewRestaurant review1= new ReviewRestaurant(current_user,restaurant1,"foarte bun",5);
         ReviewRestaurant review2= new ReviewRestaurant(current_user,restaurant1,"bun",3);
@@ -49,5 +51,17 @@ public class Main {
         reviewRestaurantService.addReview(review2);
         reviewRestaurantService.showAllReviews(restaurant1);
         System.out.println(reviewRestaurantService.meanRating(restaurant1));
+
+        RestaurantService restaurantService=new RestaurantService();
+        restaurantService.addRestaurant(current_user,restaurant1);
+        restaurantService.showRestaurants();
+        System.out.println(restaurantService.getRestaurants());
+
+        User user2= new Admin("andrei","andrei@gmail.com","F34Ra##2","0878292023","Romania","Braila","zambileor4");
+        restaurantService.addRestaurant(user2,restaurant2);
+        restaurantService.addRestaurant(user2,restaurant3);
+        restaurantService.addRestaurant(user2,restaurant1);
+
+        restaurantService.showRestaurants();
     }
 }
