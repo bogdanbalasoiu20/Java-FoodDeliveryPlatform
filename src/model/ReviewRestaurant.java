@@ -6,7 +6,6 @@ public class ReviewRestaurant {
     private User user;
     private Restaurant restaurant;
     private String reviewText;
-    private double ratingTotal;
     private int ratingUser;
 
     public ReviewRestaurant(User user, Restaurant restaurant, String reviewText, int ratingUser){

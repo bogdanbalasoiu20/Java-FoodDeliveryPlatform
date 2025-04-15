@@ -2,6 +2,7 @@ package com.bogdan.fooddelivery;
 import model.*;
 import service.OrderService;
 import service.UserService;
+import service.ReviewRestaurantService;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -35,8 +36,18 @@ public class Main {
         Payment p=new Payment(order1,PaymentMethod.CARD);
         p.paymentDetails();
 
+        Restaurant restaurant1 = new Restaurant("Restaurant1","Bucuresti","dsqsfce","08799199");
+        Restaurant restaurant2 = new Restaurant("Restaurant2","Bucuresti","dsqsfce","08799199");
 
-        ReviewRestaurant review1= new ReviewRestaurant(current_user,new Restaurant("Restaurant1","Bucuresti","dsqsfce","08799199"),"foarte bun",5);
+        ReviewRestaurant review1= new ReviewRestaurant(current_user,restaurant1,"foarte bun",5);
+        ReviewRestaurant review2= new ReviewRestaurant(current_user,restaurant1,"bun",3);
+        ReviewRestaurant review3= new ReviewRestaurant(current_user,restaurant2,"slab",2);
         review1.showReview();
+
+        ReviewRestaurantService reviewRestaurantService=new ReviewRestaurantService();
+        reviewRestaurantService.addReview(review1);
+        reviewRestaurantService.addReview(review2);
+        reviewRestaurantService.showAllReviews(restaurant1);
+        System.out.println(reviewRestaurantService.meanRating(restaurant1));
     }
 }
