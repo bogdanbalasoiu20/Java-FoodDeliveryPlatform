@@ -56,6 +56,17 @@ public class Restaurant {
         System.out.println(phoneNumber);
     }
 
+    public void showMenu(){
+        if(products.isEmpty()){
+            System.out.println("No products available");
+        }else{
+            for(Product p:products){
+                System.out.println(p.getName()+" - "+p.getPrice()+" lei");
+                System.out.println(p.getDescription());
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object o){
         if(o==this) return true;
