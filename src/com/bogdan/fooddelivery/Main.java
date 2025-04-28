@@ -63,5 +63,7 @@ public class Main {
         restaurantService.addRestaurant(user2,restaurant1);
 
         restaurantService.showRestaurants();
+
+        restaurantService.showMenu(restaurant1);
     }
 }

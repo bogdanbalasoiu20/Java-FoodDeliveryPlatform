@@ -74,4 +74,8 @@ public class UserService {
         return current_user;
     }
 
+    public boolean isLoggedIn(){
+        return current_user!=null;
+    }
+
 }

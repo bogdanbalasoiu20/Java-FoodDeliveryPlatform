@@ -53,5 +53,9 @@ public class RestaurantService{
 
     }
 
+    public void showMenu(Restaurant restaurant){
+        restaurant.showMenu();
+    }
+
 
 }
