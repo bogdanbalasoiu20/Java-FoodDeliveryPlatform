@@ -11,29 +11,35 @@ public class UserService {
 
     //app register method
     public void registerUser(String name, String email, String password, String phoneNumber, String country, String city, String address){
-        //checks if the password is valid
+
+        if(checkEmail(email) && checkPassword(password)){
+            //creates the new user
+            Client client=new Client(name,email,password,phoneNumber,country,city,address);
+            users.add(client);
+            System.out.println("Account successfully created\n");
+        }
+    }
+
+    public boolean checkEmail(String email){
+        for(User user:users){
+            if(user.getEmail().equalsIgnoreCase(email)){
+                System.out.println("The email is already in use");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkPassword(String password){
         if(!User.isValidPassword(password)){
             System.out.println("The password must contain: -at least 8 characters\n" +
                     "                                      -at least one uppercase\n" +
                     "                                      -at least one lowercase\n" +
                     "                                      -at least one special character");
 
-            return;
+            return false;
         }
-
-        //checks if the email is not already used
-        for(User user:users){
-            if(user.getEmail().equalsIgnoreCase(email)){
-                System.out.println("The email is already in use");
-                return;
-            }
-        }
-
-        //creates the new user
-        Client client=new Client(name,email,password,phoneNumber,country,city,address);
-        users.add(client);
-        System.out.println("Account successfully created");
-
+        return true;
     }
 
     //login method
@@ -45,12 +51,12 @@ public class UserService {
                     current_user=user;
                     return user;
                 } else {
-                    System.out.println("Incorrect password");
+                    System.out.println("Incorrect password! Please try again!");
                     return null;
                 }
             }
         }
-        System.out.println("Invalid email address ");
+        System.out.println("Invalid email address! Please try again!");
         return null;
     }
 
