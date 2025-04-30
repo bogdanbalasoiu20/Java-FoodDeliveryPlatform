@@ -7,6 +7,7 @@ import java.util.List;
 
 public class UserService {
     private List<User> users=new ArrayList<>();  //a list with all users
+    private List<User> admins=new ArrayList<>();
     private User current_user; //the user who is logged in
 
     //app register method
@@ -17,6 +18,15 @@ public class UserService {
             Client client=new Client(name,email,password,phoneNumber,country,city,address);
             users.add(client);
             System.out.println("Account successfully created\n");
+        }
+    }
+
+    public void registerAdmin(String name, String email, String password, String phoneNumber, String country, String city, String address){
+        if(checkEmail(email) && checkPassword(password)){
+            Admin admin=new Admin(name, email,password,phoneNumber,country,city,address);
+            admins.add(admin);
+            users.add(admin);
+            System.out.println("Admin successfully created\n");
         }
     }
 
@@ -82,6 +92,16 @@ public class UserService {
 
     public boolean isLoggedIn(){
         return current_user!=null;
+    }
+
+    public User getAdmin(String email, String password){
+        for(User user:admins){
+            if(user.getEmail().equalsIgnoreCase(email) && user.getPassword().equals(password)){
+                return user;
+            }
+        }
+        return null;
+
     }
 
 }

@@ -12,10 +12,12 @@ public class RestaurantService{
     private Set<Restaurant> restaurants =new HashSet<>();
 
     public void showRestaurants(){
+        int index=1;
         System.out.println("All restaurants:\n");
         for(Restaurant r:restaurants){
             System.out.println("----------------");
-            r.showDetails();
+            r.showDetails(index);
+            index++;
         }
         System.out.println("----------------");
     }
@@ -43,9 +45,11 @@ public class RestaurantService{
         restaurantList.sort((r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
 
         System.out.println("Restaurants sorted by name");
+        int index=1;
         for(Restaurant r:restaurantList){
             System.out.println("----------------");
-            r.showDetails();
+            r.showDetails(index);
+            index++;
         }
         System.out.println("----------------");
 

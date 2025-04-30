@@ -49,8 +49,8 @@ public class Restaurant {
         return name;
     }
 
-    public void showDetails(){
-        System.out.println(name);
+    public void showDetails(int index){
+        System.out.println(index+". "+name);
         System.out.println(city);
         System.out.println(address);
         System.out.println(phoneNumber);
@@ -60,8 +60,9 @@ public class Restaurant {
         if(products.isEmpty()){
             System.out.println("No products available");
         }else{
+            int index=0;
             for(Product p:products){
-                System.out.println(p.getName()+" - "+p.getPrice()+" lei");
+                System.out.println(++index+". "+p.getName()+" - "+p.getPrice()+" lei");
                 System.out.println(p.getDescription());
             }
         }

@@ -1,7 +1,9 @@
 package app;
+import model.*;
 import service.*;
 import java.util.Scanner;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuService {
     private UserService userService;
@@ -146,18 +148,69 @@ public class MenuService {
                 case 1:
                     userService.logout();
                     inMainMenu = false;  // ieșim din acest meniu și ne întoarcem la meniul inițial
+                    showInitialMenu();
                     break;
                 case 2:
                     userService.getCurrentUser().showProfile();
                     break;
                 case 3:
-                    restaurantService.showRestaurants();
+                    restaurantMenu();
                     break;
                 case 0:
                     inMainMenu = false;  // închidem doar acest meniu
                     break;
                 default:
                     System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    private Restaurant chooseRestaurant(){
+        List<Restaurant> restaurants=new ArrayList<>(restaurantService.getRestaurants());
+
+        System.out.println("Choose Restaurant:");
+        int choise=Integer.parseInt(scanner.nextLine());
+
+        return restaurants.get(choise-1);
+
+    }
+
+    private void restaurantMenu(){
+        restaurantService.showRestaurants();
+        System.out.println("\n----Restaurants----" +
+                "\n0.Back"+
+                "\n1.Choose a restaurant");
+        System.out.println("\nChoose an option: ");
+
+        int  choice = Integer.parseInt(scanner.nextLine());
+        if(choice==1){
+            Restaurant restaurant=chooseRestaurant();
+            System.out.println("\n---"+restaurant.getName()+" Menu---");
+            restaurant.showMenu();
+            productMenu(restaurant);
+        }
+        else if(choice==0){
+            showMainMenu();
+        }
+
+    }
+
+    private void productMenu(Restaurant restaurant){
+        if(restaurant.getProducts().size()>0){
+            System.out.println("\n0.Back"+
+                    "\n1.Choose a product");
+            int choice=Integer.parseInt(scanner.nextLine());
+
+            switch(choice){
+                case 0:
+                    restaurantMenu();
+
+                case 1:
+                    restaurant.showMenu();
+                    System.out.println("\nAdd a product to cart:");
+                    int chooseProduct=Integer.parseInt(scanner.nextLine());
+                    Product selectedProduct=restaurant.getProducts().get(chooseProduct-1);
+                    System.out.println("ai selectat "+selectedProduct);
             }
         }
     }
