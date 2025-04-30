@@ -1,4 +1,5 @@
 package service;
+import model.Product;
 import model.User;
 import model.Client;
 import model.Order;
@@ -10,7 +11,6 @@ public class OrderService {
     public void placeOrder(User user,Order order){
         ordersPerUser.putIfAbsent(user, new ArrayList<>());
         ordersPerUser.get(user).add(order);
-        System.out.println("Order has been placed successfully");
         order.orderDetails();
     }
 

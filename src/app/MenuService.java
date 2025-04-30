@@ -139,6 +139,7 @@ public class MenuService {
                     "\n1. Logout" +
                     "\n2. Show user profile" +
                     "\n3. Show restaurants" +
+                    "\n4. Orders History"+
                     "\n0. Back");
 
             System.out.print("Choose an option: ");
@@ -155,6 +156,9 @@ public class MenuService {
                     break;
                 case 3:
                     restaurantMenu();
+                    break;
+                case 4:
+                    orderService.showOrdersPerUser(userService.getCurrentUser());
                     break;
                 case 0:
                     inMainMenu = false;  // închidem doar acest meniu
@@ -204,16 +208,102 @@ public class MenuService {
             switch(choice){
                 case 0:
                     restaurantMenu();
+                    break;
 
                 case 1:
-                    restaurant.showMenu();
-                    System.out.println("\nAdd a product to cart:");
-                    int chooseProduct=Integer.parseInt(scanner.nextLine());
-                    Product selectedProduct=restaurant.getProducts().get(chooseProduct-1);
-                    System.out.println("ai selectat "+selectedProduct);
+                    placeOrderFlow(restaurant);
+                    break;
+
             }
         }
     }
+
+    private List<Product> buildOrderProducts(Restaurant restaurant) {
+        List<Product> produseComanda = new ArrayList<>();
+        List<Product> meniu = restaurant.getProducts();
+
+        boolean adding = true;
+        while (adding) {
+            System.out.println("\n--- "+restaurant.getName() +"Menu ---");
+            for (int i = 0; i < meniu.size(); i++) {
+                Product p = meniu.get(i);
+                System.out.println((i + 1) + ". " + p.getName() + " | " + p.getPrice() + " lei");
+            }
+            if(produseComanda.size()>0) {
+                System.out.println("0. Place order");
+            }
+            else{
+                System.out.println("0.Back");
+            }
+            System.out.print("Choose product: ");
+            int choice = Integer.parseInt(scanner.nextLine());
+
+            if (choice == 0) {
+                adding = false;
+            } else if (choice >= 1 && choice <= meniu.size()) {
+                Product original = meniu.get(choice - 1);
+
+                System.out.print("Quantity: ");
+                int quantity = Integer.parseInt(scanner.nextLine());
+
+                // Creezi o copie cu cantitate setată
+                Product produsComandat = new Product(original.getName(), original.getDescription(), original.getPrice(), quantity);
+                produseComanda.add(produsComandat);
+
+                System.out.println("Added " + original.getName() + " x" + quantity + " to cart.");
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        }
+
+        return produseComanda;
+    }
+
+
+    private void placeOrderFlow(Restaurant restaurant) {
+        List<Product> produseComanda = buildOrderProducts(restaurant);
+
+        if (produseComanda.isEmpty()) {
+            System.out.println("No products selected.");
+            return;
+        }
+
+        Order comanda = new Order(userService.getCurrentUser(), restaurant, produseComanda);
+        orderService.placeOrder(userService.getCurrentUser(), comanda);
+
+        PaymentMethod metodaPlata = null;
+
+        while (metodaPlata == null) {
+            System.out.println("Choose payment method: ");
+            System.out.println("1. Card");
+            System.out.println("2. Cash");
+            System.out.print("Your choice: ");
+
+            String input = scanner.nextLine();
+
+            switch (input) {
+                case "1":
+                    metodaPlata = PaymentMethod.CARD;
+                    break;
+                case "2":
+                    metodaPlata = PaymentMethod.CASH;
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
+
+        // Creăm obiectul Payment
+        Payment payment = new Payment(comanda, metodaPlata);
+        System.out.println("\nPayment successful!");
+        payment.paymentDetails();
+
+        comanda.setStatus("Paid");
+
+        System.out.println("\nOrder has been  placed successfully!");
+    }
+
+
 
 
 }
