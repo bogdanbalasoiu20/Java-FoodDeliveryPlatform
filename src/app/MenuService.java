@@ -224,33 +224,40 @@ public class MenuService {
 
         boolean adding = true;
         while (adding) {
-            System.out.println("\n--- "+restaurant.getName() +"Menu ---");
+            System.out.println("\n--- " + restaurant.getName() + " Menu ---");
             for (int i = 0; i < meniu.size(); i++) {
                 Product p = meniu.get(i);
                 System.out.println((i + 1) + ". " + p.getName() + " | " + p.getPrice() + " lei");
             }
-            if(produseComanda.size()>0) {
+
+            if (produseComanda.size() > 0) {
                 System.out.println("0. Place order");
+            } else {
+                System.out.println("0. Back");
             }
-            else{
-                System.out.println("0.Back");
-            }
+
             System.out.print("Choose product: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
             if (choice == 0) {
-                adding = false;
+                if (produseComanda.isEmpty()) {
+                    return null;  // 🔁 revenim în meniul anterior
+                } else {
+                    adding = false;
+                }
             } else if (choice >= 1 && choice <= meniu.size()) {
                 Product original = meniu.get(choice - 1);
-
                 System.out.print("Quantity: ");
                 int quantity = Integer.parseInt(scanner.nextLine());
 
-                // Creezi o copie cu cantitate setată
-                Product produsComandat = new Product(original.getName(), original.getDescription(), original.getPrice(), quantity);
+                Product produsComandat = new Product(
+                        original.getName(),
+                        original.getDescription(),
+                        original.getPrice(),
+                        quantity
+                );
                 produseComanda.add(produsComandat);
-
-                System.out.println("Added " + original.getName() + " x" + quantity + " to cart.");
+                System.out.println("Added " + original.getName() + " x" + quantity);
             } else {
                 System.out.println("Invalid choice.");
             }
@@ -260,8 +267,14 @@ public class MenuService {
     }
 
 
+
     private void placeOrderFlow(Restaurant restaurant) {
         List<Product> produseComanda = buildOrderProducts(restaurant);
+
+        if (produseComanda == null) {
+            productMenu(restaurant); // 🔁 revenim dacă s-a apăsat Back
+            return;
+        }
 
         if (produseComanda.isEmpty()) {
             System.out.println("No products selected.");
@@ -271,14 +284,13 @@ public class MenuService {
         Order comanda = new Order(userService.getCurrentUser(), restaurant, produseComanda);
         orderService.placeOrder(userService.getCurrentUser(), comanda);
 
+        // Plata
         PaymentMethod metodaPlata = null;
-
         while (metodaPlata == null) {
             System.out.println("Choose payment method: ");
             System.out.println("1. Card");
             System.out.println("2. Cash");
             System.out.print("Your choice: ");
-
             String input = scanner.nextLine();
 
             switch (input) {
@@ -293,15 +305,14 @@ public class MenuService {
             }
         }
 
-        // Creăm obiectul Payment
         Payment payment = new Payment(comanda, metodaPlata);
         System.out.println("\nPayment successful!");
         payment.paymentDetails();
-
         comanda.setStatus("Paid");
 
-        System.out.println("\nOrder has been  placed successfully!");
+        System.out.println("\nOrder has been placed successfully!");
     }
+
 
 
 
