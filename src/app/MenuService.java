@@ -27,6 +27,17 @@ public class MenuService {
         showInitialMenu();
     }
 
+    private int readInt(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Try again.");
+            }
+        }
+    }
+
     private void showInitialMenu() {
         boolean inInitialMenu = true;
 
@@ -36,8 +47,7 @@ public class MenuService {
                     "\n2. Login" +
                     "\n0. Exit");
 
-            System.out.print("Choose an option: ");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
@@ -112,7 +122,7 @@ public class MenuService {
             System.out.println("See you next time!");
         }
         if (userService.isLoggedIn()) {
-            showMainMenu();  // 🔁 ne întoarcem aici
+            showMainMenu();
         }
     }
 
@@ -127,7 +137,7 @@ public class MenuService {
         }
 
         if (userService.isLoggedIn()) {
-            showMainMenu();  // 🔁 ne întoarcem aici
+            showMainMenu();
         }
     }
 
@@ -142,13 +152,12 @@ public class MenuService {
                     "\n4. Orders History"+
                     "\n0. Back");
 
-            System.out.print("Choose an option: ");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt("Choose an option: ");
 
             switch (choice) {
                 case 1:
                     userService.logout();
-                    inMainMenu = false;  // ieșim din acest meniu și ne întoarcem la meniul inițial
+                    inMainMenu = false;
                     showInitialMenu();
                     break;
                 case 2:
@@ -162,7 +171,7 @@ public class MenuService {
                     orderService.showOrdersPerUser(userService.getCurrentUser());
                     break;
                 case 0:
-                    inMainMenu = false;  // închidem doar acest meniu
+                    inMainMenu = false;
                     break;
                 default:
                     System.out.println("Invalid option.");
@@ -170,98 +179,127 @@ public class MenuService {
         }
     }
 
-    private Restaurant chooseRestaurant(){
-        List<Restaurant> restaurants=new ArrayList<>(restaurantService.getRestaurants());
+    private Restaurant chooseRestaurant() {
+        List<Restaurant> restaurants = new ArrayList<>(restaurantService.getRestaurants());
+        if (restaurants.isEmpty()) {
+            System.out.println("No restaurants available.");
+            return null;
+        }
 
-        System.out.println("Choose Restaurant:");
-        int choise=Integer.parseInt(scanner.nextLine());
 
-        return restaurants.get(choise-1);
+        int choice;
+        do {
+            choice = readInt("Choose restaurant (0 to cancel): ");
+        } while (choice < 0 || choice > restaurants.size());
 
+        return (choice == 0) ? null : restaurants.get(choice - 1);
     }
 
-    private void restaurantMenu(){
-        System.out.println("\n----Restaurants----" +
-                "\n0.Back"+
-                "\n1.Choose a restaurant"+
-                "\n2.Sort restaurants by name");
-        System.out.println("\nChoose an option: ");
 
-        int  choice = Integer.parseInt(scanner.nextLine());
-        if(choice==1){
-            Restaurant restaurant=chooseRestaurant();
-            System.out.println("\n---"+restaurant.getName()+" Menu---");
-            restaurant.showMenu();
-            productMenu(restaurant);
-        }
-        else if(choice==0){
-            showMainMenu();
-        }
-        else if(choice==2){
-            restaurantService.sortRestaurants();
-            restaurantMenu();
-        }
+    private void restaurantMenu() {
+        while (true) {
+            System.out.println("\n----Restaurants----" +
+                    "\n0. Back" +
+                    "\n1. Choose a restaurant" +
+                    "\n2. Sort restaurants by name" +
+                    "\n3. Sort by rating");
 
-    }
+            int choice = readInt("Choose an option: ");
 
-    private void productMenu(Restaurant restaurant){
-        if(restaurant.getProducts().size()>0){
-            System.out.println("\n0.Back"+
-                    "\n1.Choose a product"+
-                    "\n2.Reviews");
-            System.out.println("Choose an option: ");
-            int choice=Integer.parseInt(scanner.nextLine());
-
-            switch(choice){
+            switch (choice) {
                 case 0:
-                    restaurantMenu();
-                    break;
-
+                    return;
                 case 1:
-                    placeOrderFlow(restaurant);
+                    restaurantService.showRestaurants();
+                    Restaurant restaurant = chooseRestaurant();
+                    if (restaurant != null) {
+                        System.out.println("\n---" + restaurant.getName() + " Menu---");
+                        restaurant.showMenu();
+                        productMenu(restaurant);
+                    }
                     break;
-
                 case 2:
-                    handleReviews(restaurant);
+                    restaurantService.sortRestaurantsByName();
                     break;
+                case 3:
+                    restaurantService.sortRestaurantsByRating(reviewRestaurantService);
+                    break;
+                default:
+                    System.out.println("\nInvalid option.");
             }
         }
     }
 
-    private void handleReviews(Restaurant restaurant){
-        System.out.println("\n---"+restaurant.getName()+" Reviews---");
-        System.out.println("\n0.Back"+
-                "\n1.Show Reviews"+
-                "\n2.Add Review");
 
-        System.out.println("\nChoose a option: ");
-        int choice=Integer.parseInt(scanner.nextLine());
-
-        switch(choice){
-            case 0:
-                productMenu(restaurant);
-                break;
-            case 1:
-                System.out.println("\n---"+restaurant.getName()+" Reviews---");
-                reviewRestaurantService.showAllReviews(restaurant);
-                handleReviews(restaurant);
-                break;
-            case 2:
-                System.out.println("\nRating:");
-                int rating=Integer.parseInt(scanner.nextLine());
-
-                System.out.println("\nWrite your review:");
-                String reviewText=scanner.nextLine();
-
-                ReviewRestaurant reviewRestaurant = new ReviewRestaurant(userService.getCurrentUser(), restaurant, reviewText, rating);
-
-                reviewRestaurantService.addReview(reviewRestaurant);
-                handleReviews(restaurant);
-                break;
+    private void productMenu(Restaurant restaurant) {
+        if (restaurant.getProducts().isEmpty()) {
+            System.out.println("No products available.");
+            return;
         }
 
+        while (true) {
+            System.out.println("\n0. Back" +
+                    "\n1. Choose a product" +
+                    "\n2. Reviews");
 
+            int choice = readInt("Choose an option: ");
+
+            switch (choice) {
+                case 0:
+                    return; // revine în restaurantMenu
+                case 1:
+                    placeOrderFlow(restaurant);
+                    break;
+                case 2:
+                    handleReviews(restaurant);
+                    break;
+                default:
+                    System.out.println("\nInvalid option.");
+            }
+        }
     }
+
+
+    private void handleReviews(Restaurant restaurant) {
+        while (true) {
+            System.out.println("\n--- " + restaurant.getName() + " Reviews ---");
+            System.out.println("\n0. Back" +
+                    "\n1. Show Reviews" +
+                    "\n2. Add Review");
+
+            int choice = readInt("Choose an option: ");
+
+            switch (choice) {
+                case 0:
+                    return; // revine în productMenu
+                case 1:
+                    reviewRestaurantService.showAllReviews(restaurant);
+                    break;
+                case 2:
+                    int rating = readInt("\nRating (1-5): ");
+                    while (rating < 1 || rating > 5) {
+                        System.out.println("Rating must be between 1 and 5.");
+                        rating = readInt("Rating (1-5): ");
+                    }
+
+                    System.out.println("\nWrite your review:");
+                    String reviewText = scanner.nextLine();
+
+                    ReviewRestaurant review = new ReviewRestaurant(
+                            userService.getCurrentUser(),
+                            restaurant,
+                            reviewText,
+                            rating
+                    );
+
+                    reviewRestaurantService.addReview(review);
+                    break;
+                default:
+                    System.out.println("\nInvalid option.");
+            }
+        }
+    }
+
 
     private List<Product> buildOrderProducts(Restaurant restaurant) {
         List<Product> produseComanda = new ArrayList<>();
@@ -281,19 +319,17 @@ public class MenuService {
                 System.out.println("0. Back");
             }
 
-            System.out.print("Choose product: ");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice = readInt("Choose product: ");
 
             if (choice == 0) {
                 if (produseComanda.isEmpty()) {
-                    return null;  // 🔁 revenim în meniul anterior
+                    return null;
                 } else {
                     adding = false;
                 }
             } else if (choice >= 1 && choice <= meniu.size()) {
                 Product original = meniu.get(choice - 1);
-                System.out.print("Quantity: ");
-                int quantity = Integer.parseInt(scanner.nextLine());
+                int quantity = readInt("Quantity: ");
 
                 Product produsComandat = new Product(
                         original.getName(),
@@ -317,7 +353,7 @@ public class MenuService {
         List<Product> produseComanda = buildOrderProducts(restaurant);
 
         if (produseComanda == null) {
-            productMenu(restaurant); // 🔁 revenim dacă s-a apăsat Back
+            productMenu(restaurant);
             return;
         }
 
@@ -335,14 +371,13 @@ public class MenuService {
             System.out.println("Choose payment method: ");
             System.out.println("1. Card");
             System.out.println("2. Cash");
-            System.out.print("Your choice: ");
-            String input = scanner.nextLine();
+            int input = readInt("Your choice: ");
 
             switch (input) {
-                case "1":
+                case 1:
                     metodaPlata = PaymentMethod.CARD;
                     break;
-                case "2":
+                case 2:
                     metodaPlata = PaymentMethod.CASH;
                     break;
                 default:

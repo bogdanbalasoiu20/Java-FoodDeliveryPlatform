@@ -30,6 +30,9 @@ public class Main {
         productService.addProductInMenu(user1,restaurant1,new Product("pizza","asxasx",20,1));
         productService.addProductInMenu(user1,restaurant1,new Product("paste","dxa",30,1));
         productService.addProductInMenu(user1,restaurant1,new Product("supa","xacqec",15,2));
+        productService.addProductInMenu(user1,restaurant2,new Product("supa","xacqec",15,2));
+        productService.addProductInMenu(user1,restaurant2,new Product("ciorba","xacqec",15,2));
+        productService.addProductInMenu(user1,restaurant3,new Product("chiftele","xacqec",15,2));
 
 
         MenuService menuService = new MenuService(userService,orderService,restaurantService,productService,reviewRestaurantService);

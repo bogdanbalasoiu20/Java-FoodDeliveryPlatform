@@ -34,7 +34,7 @@ public class RestaurantService{
         return restaurants;
     }
 
-    public void sortRestaurants(){
+    public void sortRestaurantsByName(){
         if(restaurants.isEmpty()){
             System.out.println("No restaurants available");
             return;
@@ -56,6 +56,32 @@ public class RestaurantService{
 
 
     }
+
+    public void sortRestaurantsByRating(ReviewRestaurantService reviewService){
+        if(restaurants.isEmpty()){
+            System.out.println("No restaurants available");
+            return;
+        }
+
+        List<Restaurant> restaurantList = new ArrayList<>(restaurants);
+
+        restaurantList.sort((r1, r2) -> {
+            double rating1 = reviewService.meanRating(r1);
+            double rating2 = reviewService.meanRating(r2);
+            return Double.compare(rating2, rating1);
+        });
+
+        System.out.println("Restaurants sorted by rating");
+        int index = 1;
+        for(Restaurant r : restaurantList){
+            System.out.println("----------------");
+            System.out.println(index + ". " + r.getName() + " - Rating: " + reviewService.meanRating(r) + "/5");
+            index++;
+        }
+        System.out.println("----------------");
+    }
+
+
 
     public void showMenu(Restaurant restaurant){
         restaurant.showMenu();

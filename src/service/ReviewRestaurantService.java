@@ -31,15 +31,18 @@ public class ReviewRestaurantService {
         }
     }
 
+
     public double meanRating(Restaurant restaurant){
-        List <ReviewRestaurant> reviews = reviewPerRestaurant.get(restaurant);
-        double rating=0;
-        if(!reviews.isEmpty()){
-            for(ReviewRestaurant r:reviews){
-                rating+=r.getRatingUser();
-            }
-        return rating/reviews.size();
+        List<ReviewRestaurant> reviews = reviewPerRestaurant.get(restaurant);
+        if(reviews == null || reviews.isEmpty()) {
+            return 0;
         }
-        return 0;
+
+        double rating = 0;
+        for(ReviewRestaurant r : reviews){
+            rating += r.getRatingUser();
+        }
+        return rating / reviews.size();
     }
+
 }
