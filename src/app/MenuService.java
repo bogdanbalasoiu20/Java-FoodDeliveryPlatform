@@ -38,6 +38,18 @@ public class MenuService {
         }
     }
 
+    private double readDouble(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number. Try again.");
+            }
+        }
+    }
+
+
     private void showInitialMenu() {
         boolean inInitialMenu = true;
 
@@ -145,11 +157,18 @@ public class MenuService {
         boolean inMainMenu = true;
 
         while (inMainMenu) {
+            User currentUser = userService.getCurrentUser();
+            boolean isAdmin = currentUser.getUserType().equalsIgnoreCase("Admin");
+
             System.out.println("\n----Main Menu----" +
                     "\n1. Logout" +
                     "\n2. Show user profile" +
                     "\n3. Show restaurants" +
-                    "\n4. Orders History"+
+                    "\n4. Orders History" +
+                    (isAdmin ?
+                            "\n5. Add restaurant" +
+                                    "\n6. Add product" +
+                                    "\n7. Remove product" : "") +
                     "\n0. Back");
 
             int choice = readInt("Choose an option: ");
@@ -160,24 +179,105 @@ public class MenuService {
                     inMainMenu = false;
                     showInitialMenu();
                     break;
+
                 case 2:
-                    userService.getCurrentUser().showProfile();
+                    currentUser.showProfile();
                     break;
+
                 case 3:
                     restaurantService.showRestaurants();
                     restaurantMenu();
                     break;
+
                 case 4:
-                    orderService.showOrdersPerUser(userService.getCurrentUser());
+                    orderService.showOrdersPerUser(currentUser);
                     break;
+
+                case 5:
+                    if (!isAdmin) {
+                        System.out.println("Invalid option.");
+                        break;
+                    }
+
+                    System.out.println("\n---- Add a new restaurant ----");
+                    System.out.print("Name: ");
+                    String name = scanner.nextLine();
+                    System.out.print("City: ");
+                    String city = scanner.nextLine();
+                    System.out.print("Address: ");
+                    String address = scanner.nextLine();
+                    System.out.print("Phone Number: ");
+                    String phone = scanner.nextLine();
+
+                    restaurantService.addRestaurant(currentUser, new Restaurant(name, city, address, phone));
+                    System.out.println("Restaurant '" + name + "' added successfully!");
+                    break;
+
+                case 6:
+                    if (!isAdmin) {
+                        System.out.println("Invalid option.");
+                        break;
+                    }
+
+                    System.out.println("\n---- Add a new product ----");
+                    System.out.print("Name: ");
+                    String productName = scanner.nextLine();
+                    System.out.print("Description: ");
+                    String description = scanner.nextLine();
+                    double price = readDouble("Price: ");
+                    int quantity = readInt("Quantity: ");
+
+                    restaurantService.showRestaurants();
+                    Restaurant restaurant = chooseRestaurant();
+                    if (restaurant == null) {
+                        System.out.println("Invalid restaurant selected.");
+                        break;
+                    }
+
+                    productService.addProductInMenu(currentUser, restaurant, new Product(productName, description, price, quantity));
+                    break;
+
+                case 7:
+                    if (!isAdmin) {
+                        System.out.println("Invalid option.");
+                        break;
+                    }
+
+                    System.out.println("\n---- Remove a product ----");
+                    restaurantService.showRestaurants();
+                    Restaurant restaurant2 = chooseRestaurant();
+                    if (restaurant2 == null) {
+                        System.out.println("Invalid restaurant selected.");
+                        break;
+                    }
+
+                    List<Product> products = restaurant2.getProducts();
+                    if (products.isEmpty()) {
+                        System.out.println("No products to remove.");
+                        break;
+                    }
+
+                    restaurantService.showMenu(restaurant2);
+                    int productIndex = readInt("Select a product to remove: ");
+                    if (productIndex < 1 || productIndex > products.size()) {
+                        System.out.println("Invalid product selection.");
+                        break;
+                    }
+
+                    Product product = products.get(productIndex - 1);
+                    productService.removeProductFromMenu(currentUser, restaurant2, product);
+                    break;
+
                 case 0:
                     inMainMenu = false;
                     break;
+
                 default:
                     System.out.println("Invalid option.");
             }
         }
     }
+
 
     private Restaurant chooseRestaurant() {
         List<Restaurant> restaurants = new ArrayList<>(restaurantService.getRestaurants());
