@@ -13,7 +13,7 @@ public class RestaurantService{
 
     public void showRestaurants(){
         int index=1;
-        System.out.println("All restaurants:\n");
+        System.out.println("\nAll restaurants:\n");
         for(Restaurant r:restaurants){
             System.out.println("----------------");
             r.showDetails(index);

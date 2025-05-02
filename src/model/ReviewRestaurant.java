@@ -38,7 +38,7 @@ public class ReviewRestaurant {
 
 
     public void showReview(){
-        System.out.println("User: "+user.getName()+" - Rating: "+ratingUser+"/5");
-        System.out.println("'"+reviewText+"'\n");
+        System.out.println("\nUser: "+user.getName()+" - Rating: "+ratingUser+"/5");
+        System.out.println("\n'"+reviewText+"'");
     }
 }

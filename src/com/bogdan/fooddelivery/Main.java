@@ -19,9 +19,9 @@ public class Main {
         userService.registerAdmin("Bogdan","aa","aaAA11$$","0182912018","aa","aa","aaa");
         User user1=userService.getAdmin("aa","aaAA11$$");
 
-        Restaurant restaurant1= new Restaurant("Restaurant1", "Braila", "aaaa" , "093782991");
-        Restaurant restaurant2= new Restaurant("Restaurant2", "Braila", "aaaa" , "093782991");
-        Restaurant restaurant3= new Restaurant("Restaurant3", "Braila", "aaaa" , "093782991");
+        Restaurant restaurant1= new Restaurant("Pizzeria Roma", "Braila", "aaaa" , "093782991");
+        Restaurant restaurant2= new Restaurant("All Saints", "Braila", "aaaa" , "093782991");
+        Restaurant restaurant3= new Restaurant("Beraria H", "Braila", "aaaa" , "093782991");
 
         restaurantService.addRestaurant(user1,restaurant1);
         restaurantService.addRestaurant(user1,restaurant2);

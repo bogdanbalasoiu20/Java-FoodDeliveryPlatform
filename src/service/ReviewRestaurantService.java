@@ -19,13 +19,15 @@ public class ReviewRestaurantService {
         List <ReviewRestaurant> reviews =reviewPerRestaurant.get(restaurant);
 
         if(reviews==null||reviews.isEmpty()){
-            System.out.println("No reviews found");
+            System.out.println("\nNo reviews found");
             return;
         }
 
-        System.out.println(restaurant.getName()+" - Rating "+meanRating(restaurant)+"/5");
+        System.out.println("\n"+restaurant.getName()+" - Rating "+meanRating(restaurant)+"/5");
+        System.out.println("\n*************");
         for(ReviewRestaurant r:reviews){
             r.showReview();
+            System.out.println("\n*************");
         }
     }
 

@@ -155,6 +155,7 @@ public class MenuService {
                     userService.getCurrentUser().showProfile();
                     break;
                 case 3:
+                    restaurantService.showRestaurants();
                     restaurantMenu();
                     break;
                 case 4:
@@ -180,10 +181,10 @@ public class MenuService {
     }
 
     private void restaurantMenu(){
-        restaurantService.showRestaurants();
         System.out.println("\n----Restaurants----" +
                 "\n0.Back"+
-                "\n1.Choose a restaurant");
+                "\n1.Choose a restaurant"+
+                "\n2.Sort restaurants by name");
         System.out.println("\nChoose an option: ");
 
         int  choice = Integer.parseInt(scanner.nextLine());
@@ -196,13 +197,19 @@ public class MenuService {
         else if(choice==0){
             showMainMenu();
         }
+        else if(choice==2){
+            restaurantService.sortRestaurants();
+            restaurantMenu();
+        }
 
     }
 
     private void productMenu(Restaurant restaurant){
         if(restaurant.getProducts().size()>0){
             System.out.println("\n0.Back"+
-                    "\n1.Choose a product");
+                    "\n1.Choose a product"+
+                    "\n2.Reviews");
+            System.out.println("Choose an option: ");
             int choice=Integer.parseInt(scanner.nextLine());
 
             switch(choice){
@@ -214,8 +221,46 @@ public class MenuService {
                     placeOrderFlow(restaurant);
                     break;
 
+                case 2:
+                    handleReviews(restaurant);
+                    break;
             }
         }
+    }
+
+    private void handleReviews(Restaurant restaurant){
+        System.out.println("\n---"+restaurant.getName()+" Reviews---");
+        System.out.println("\n0.Back"+
+                "\n1.Show Reviews"+
+                "\n2.Add Review");
+
+        System.out.println("\nChoose a option: ");
+        int choice=Integer.parseInt(scanner.nextLine());
+
+        switch(choice){
+            case 0:
+                productMenu(restaurant);
+                break;
+            case 1:
+                System.out.println("\n---"+restaurant.getName()+" Reviews---");
+                reviewRestaurantService.showAllReviews(restaurant);
+                handleReviews(restaurant);
+                break;
+            case 2:
+                System.out.println("\nRating:");
+                int rating=Integer.parseInt(scanner.nextLine());
+
+                System.out.println("\nWrite your review:");
+                String reviewText=scanner.nextLine();
+
+                ReviewRestaurant reviewRestaurant = new ReviewRestaurant(userService.getCurrentUser(), restaurant, reviewText, rating);
+
+                reviewRestaurantService.addReview(reviewRestaurant);
+                handleReviews(restaurant);
+                break;
+        }
+
+
     }
 
     private List<Product> buildOrderProducts(Restaurant restaurant) {
