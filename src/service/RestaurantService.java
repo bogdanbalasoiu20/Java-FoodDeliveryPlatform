@@ -30,56 +30,37 @@ public class RestaurantService{
         }
     }
 
+    public void removeRestaurant(User user, Restaurant restaurant){
+        if(user instanceof Admin){
+            if(restaurant!=null && restaurants.contains(restaurant)){
+                restaurants.remove(restaurant);
+                System.out.println("Restaurant '" + restaurant.getName() + "' removed successfully!");
+            }
+        }
+    }
+
     public Set<Restaurant> getRestaurants(){
         return restaurants;
     }
 
-    public void sortRestaurantsByName(){
-        if(restaurants.isEmpty()){
-            System.out.println("No restaurants available");
-            return;
-        }
-
-        List <Restaurant> restaurantList = new ArrayList<>(restaurants);
-
-        restaurantList.sort((r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
-
-        System.out.println("Restaurants sorted by name");
-        int index=1;
-        for(Restaurant r:restaurantList){
-            System.out.println("----------------");
-            r.showDetails(index);
-            index++;
-        }
-        System.out.println("----------------");
 
 
-
+    public List<Restaurant> getRestaurantsSortedByName() {
+        List<Restaurant> list = new ArrayList<>(restaurants);
+        list.sort((r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
+        return list;
     }
 
-    public void sortRestaurantsByRating(ReviewRestaurantService reviewService){
-        if(restaurants.isEmpty()){
-            System.out.println("No restaurants available");
-            return;
-        }
-
-        List<Restaurant> restaurantList = new ArrayList<>(restaurants);
-
-        restaurantList.sort((r1, r2) -> {
+    public List<Restaurant> getRestaurantsSortedByRating(ReviewRestaurantService reviewService) {
+        List<Restaurant> list = new ArrayList<>(restaurants);
+        list.sort((r1, r2) -> {
             double rating1 = reviewService.meanRating(r1);
             double rating2 = reviewService.meanRating(r2);
             return Double.compare(rating2, rating1);
         });
-
-        System.out.println("Restaurants sorted by rating");
-        int index = 1;
-        for(Restaurant r : restaurantList){
-            System.out.println("----------------");
-            System.out.println(index + ". " + r.getName() + " - Rating: " + reviewService.meanRating(r) + "/5");
-            index++;
-        }
-        System.out.println("----------------");
+        return list;
     }
+
 
 
 

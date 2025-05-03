@@ -12,6 +12,8 @@ public class MenuService {
     private ProductService productService;
     private ReviewRestaurantService reviewRestaurantService;
     private Scanner scanner;
+    private List<Restaurant> sortedRestaurants;
+
 
     public MenuService(UserService userservice, OrderService orderservice, RestaurantService restaurantservice, ProductService productservice, ReviewRestaurantService reviewRestaurantService) {
         this.userService=userservice;
@@ -20,6 +22,7 @@ public class MenuService {
         this.productService=productservice;
         this.reviewRestaurantService=reviewRestaurantService;
         this.scanner=new Scanner(System.in);
+        this.sortedRestaurants=null;
     }
 
 
@@ -168,7 +171,8 @@ public class MenuService {
                     (isAdmin ?
                             "\n5. Add restaurant" +
                                     "\n6. Add product" +
-                                    "\n7. Remove product" : "") +
+                                    "\n7. Remove product" +
+                                    "\n8. Remove restaurant" : "") +
                     "\n0. Back");
 
             int choice = readInt("Choose an option: ");
@@ -267,7 +271,22 @@ public class MenuService {
                     Product product = products.get(productIndex - 1);
                     productService.removeProductFromMenu(currentUser, restaurant2, product);
                     break;
+                case 8:
+                    if (!isAdmin) {
+                        System.out.println("Invalid option.");
+                        break;
+                    }
 
+                    System.out.println("\n---- Remove a restaurant ----");
+                    restaurantService.showRestaurants();
+                    Restaurant restaurant3 = chooseRestaurant();
+                    if (restaurant3 == null) {
+                        System.out.println("Invalid restaurant selected.");
+                        break;
+                    }
+
+                    restaurantService.removeRestaurant(currentUser, restaurant3);
+                    break;
                 case 0:
                     inMainMenu = false;
                     break;
@@ -280,12 +299,20 @@ public class MenuService {
 
 
     private Restaurant chooseRestaurant() {
-        List<Restaurant> restaurants = new ArrayList<>(restaurantService.getRestaurants());
+        List<Restaurant> restaurants = (sortedRestaurants != null)
+                ? sortedRestaurants
+                : new ArrayList<>(restaurantService.getRestaurants());
+
         if (restaurants.isEmpty()) {
             System.out.println("No restaurants available.");
             return null;
         }
 
+        System.out.println("\n-----------");
+        for (int i = 0; i < restaurants.size(); i++) {
+            System.out.println((i + 1) + ". " + restaurants.get(i).getName());
+            System.out.println("-----------");
+        }
 
         int choice;
         do {
@@ -294,6 +321,7 @@ public class MenuService {
 
         return (choice == 0) ? null : restaurants.get(choice - 1);
     }
+
 
 
     private void restaurantMenu() {
@@ -310,20 +338,40 @@ public class MenuService {
                 case 0:
                     return;
                 case 1:
-                    restaurantService.showRestaurants();
+                    if (sortedRestaurants == null) {
+                        restaurantService.showRestaurants();
+                    }
+
                     Restaurant restaurant = chooseRestaurant();
                     if (restaurant != null) {
                         System.out.println("\n---" + restaurant.getName() + " Menu---");
                         restaurant.showMenu();
                         productMenu(restaurant);
+                        sortedRestaurants = null;
                     }
                     break;
+
                 case 2:
-                    restaurantService.sortRestaurantsByName();
+                    sortedRestaurants = restaurantService.getRestaurantsSortedByName();
+                    System.out.println("\nRestaurants sorted by name.");
+                    for (int i = 0; i < sortedRestaurants.size(); i++) {
+                        System.out.println("----------------");
+                        sortedRestaurants.get(i).showDetails(i + 1);
+                    }
+                    System.out.println("----------------");
                     break;
+
                 case 3:
-                    restaurantService.sortRestaurantsByRating(reviewRestaurantService);
+                    sortedRestaurants = restaurantService.getRestaurantsSortedByRating(reviewRestaurantService);
+                    System.out.println("\nRestaurants sorted by rating.");
+                    for (int i = 0; i < sortedRestaurants.size(); i++) {
+                        Restaurant r = sortedRestaurants.get(i);
+                        System.out.println("----------------");
+                        System.out.println((i + 1) + ". " + r.getName() + " - Rating: " + reviewRestaurantService.meanRating(r) + "/5");
+                    }
+                    System.out.println("----------------");
                     break;
+
                 default:
                     System.out.println("\nInvalid option.");
             }
@@ -346,7 +394,7 @@ public class MenuService {
 
             switch (choice) {
                 case 0:
-                    return; // revine în restaurantMenu
+                    return;
                 case 1:
                     placeOrderFlow(restaurant);
                     break;
@@ -371,7 +419,7 @@ public class MenuService {
 
             switch (choice) {
                 case 0:
-                    return; // revine în productMenu
+                    return;
                 case 1:
                     reviewRestaurantService.showAllReviews(restaurant);
                     break;
