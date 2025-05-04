@@ -230,6 +230,7 @@ public class MenuService {
                     String description = scanner.nextLine();
                     double price = readDouble("Price: ");
                     int quantity = readInt("Quantity: ");
+                    int category = readInt("Category: \n1.Main Course\n2.Desert\n3.Drink\nChoose category:");
 
                     restaurantService.showRestaurants();
                     Restaurant restaurant = chooseRestaurant();
@@ -238,7 +239,18 @@ public class MenuService {
                         break;
                     }
 
-                    productService.addProductInMenu(currentUser, restaurant, new Product(productName, description, price, quantity));
+                    Product productToAdd;
+                    if(category == 1){
+                        productToAdd =new MainCourse(productName, description, price, quantity);
+                    }
+                    else if(category == 2){
+                        productToAdd =new Desert(productName, description, price, quantity);
+                    }
+                    else {
+                        productToAdd =new Drink(productName, description, price, quantity);
+                    }
+
+                    productService.addProductInMenu(currentUser, restaurant,productToAdd);
                     break;
 
                 case 7:
@@ -255,7 +267,7 @@ public class MenuService {
                         break;
                     }
 
-                    List<Product> products = restaurant2.getProducts();
+                    List<Product> products = restaurant2.showMenu();
                     if (products.isEmpty()) {
                         System.out.println("No products to remove.");
                         break;
@@ -308,11 +320,6 @@ public class MenuService {
             return null;
         }
 
-        System.out.println("\n-----------");
-        for (int i = 0; i < restaurants.size(); i++) {
-            System.out.println((i + 1) + ". " + restaurants.get(i).getName());
-            System.out.println("-----------");
-        }
 
         int choice;
         do {
@@ -456,10 +463,7 @@ public class MenuService {
         boolean adding = true;
         while (adding) {
             System.out.println("\n--- " + restaurant.getName() + " Menu ---");
-            for (int i = 0; i < meniu.size(); i++) {
-                Product p = meniu.get(i);
-                System.out.println((i + 1) + ". " + p.getName() + " | " + p.getPrice() + " lei");
-            }
+            restaurant.showMenu();
 
             if (produseComanda.size() > 0) {
                 System.out.println("0. Place order");

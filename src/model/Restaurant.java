@@ -59,17 +59,45 @@ public class Restaurant {
     }
 
 
-    public void showMenu(){
+    public List<Product> showMenu() {
+        List<Product> displayedProducts = new ArrayList<>();
+
         if(products.isEmpty()){
             System.out.println("No products available");
-        }else{
-            int index=0;
-            for(Product p:products){
-                System.out.println(++index+". "+p.getName()+" - "+p.getPrice()+" lei");
-                System.out.println(p.getDescription());
+        } else {
+            int index = 0;
+
+            System.out.println("\n---- Main Course ----");
+            for(Product p : products){
+                if(p instanceof MainCourse){
+                    System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
+                    System.out.println(p.getDescription());
+                    displayedProducts.add(p);
+                }
+            }
+
+            System.out.println("\n---- Deserts ----");
+            for(Product p : products){
+                if(p instanceof Desert){
+                    System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
+                    System.out.println(p.getDescription());
+                    displayedProducts.add(p);
+                }
+            }
+
+            System.out.println("\n---- Drinks ----");
+            for(Product p : products){
+                if(p instanceof Drink){
+                    System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
+                    System.out.println(p.getDescription());
+                    displayedProducts.add(p);
+                }
             }
         }
+
+        return displayedProducts;
     }
+
 
     @Override
     public boolean equals(Object o){

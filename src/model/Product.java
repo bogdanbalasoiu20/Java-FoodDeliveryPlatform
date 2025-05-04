@@ -39,4 +39,27 @@ public class Product {
     public String toString(){
         return name+"-"+price+" lei (x"+quantity+")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        return name.equals(product.name) &&
+                description.equals(product.description) &&
+                price == product.price &&
+                quantity == product.quantity;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + Double.hashCode(price);
+        result = 31 * result + Integer.hashCode(quantity);
+        return result;
+    }
+
 }
