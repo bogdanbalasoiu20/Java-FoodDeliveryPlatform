@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Restaurant {
     private int id;
-    private static int counter=0;
     private String name;
     private String city;
     private String address;
@@ -15,7 +14,15 @@ public class Restaurant {
     private List<Product> products;
 
     public Restaurant(String name, String city, String address, String phoneNumber) {
-        this.id=++counter;
+        this.name = name;
+        this.city = city;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.products = new ArrayList<>();
+    }
+
+    public Restaurant(int id, String name, String city, String address, String phoneNumber) {
+        this.id = id;
         this.name = name;
         this.city = city;
         this.address = address;
@@ -25,6 +32,10 @@ public class Restaurant {
 
     public int getId(){
         return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -69,7 +80,7 @@ public class Restaurant {
 
             System.out.println("\n---- Main Course ----");
             for(Product p : products){
-                if(p instanceof MainCourse){
+                if(p.getProductType().equalsIgnoreCase("main_course")){
                     System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
                     System.out.println(p.getDescription());
                     displayedProducts.add(p);
@@ -78,7 +89,7 @@ public class Restaurant {
 
             System.out.println("\n---- Deserts ----");
             for(Product p : products){
-                if(p instanceof Desert){
+                if(p.getProductType().equalsIgnoreCase("desert")){
                     System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
                     System.out.println(p.getDescription());
                     displayedProducts.add(p);
@@ -87,7 +98,7 @@ public class Restaurant {
 
             System.out.println("\n---- Drinks ----");
             for(Product p : products){
-                if(p instanceof Drink){
+                if(p.getProductType().equalsIgnoreCase("drink")){
                     System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
                     System.out.println(p.getDescription());
                     displayedProducts.add(p);

@@ -27,15 +27,15 @@ public class Main {
         restaurantService.addRestaurant(user1,restaurant2);
         restaurantService.addRestaurant(user1,restaurant3);
 
-        Product product1=new MainCourse("pizza","asxasx",20.0,1);
-        Product product2=new MainCourse("paste","dxa",30.0,1);
-        Product product3=new MainCourse("supa","xacqec",15.0,2);
-        Product product4=new MainCourse("ciorba","xacqec",15.0,2);
-        Product product5=new MainCourse("chiftele","xacqec",15.0,2);
+        Product product1=new Product("pizza","asxasx",20.0,1,"main_course");
+        Product product2=new Product("paste","dxa",30.0,1,"main_course");
+        Product product3=new Product("supa","xacqec",15.0,2,"main_course");
+        Product product4=new Product("ciorba","xacqec",15.0,2,"main_course");
+        Product product5=new Product("chiftele","xacqec",15.0,2,"main_course");
 
-        Product product6=new Desert("tiramisu","acfaef",40.0,1);
+        Product product6=new Product("tiramisu","acfaef",40.0,1,"desert");
 
-        Product product7=new Drink("cola","dwce",5.0,1);
+        Product product7=new Product("cola","dwce",5.0,1,"drink");
 
 
         productService.addProductInMenu(user1,restaurant1,product1);

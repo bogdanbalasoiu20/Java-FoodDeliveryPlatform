@@ -241,13 +241,13 @@ public class MenuService {
 
                     Product productToAdd;
                     if(category == 1){
-                        productToAdd =new MainCourse(productName, description, price, quantity);
+                        productToAdd =new Product(productName, description, price, quantity,"main_course");
                     }
                     else if(category == 2){
-                        productToAdd =new Desert(productName, description, price, quantity);
+                        productToAdd =new Product(productName, description, price, quantity,"desert");
                     }
                     else {
-                        productToAdd =new Drink(productName, description, price, quantity);
+                        productToAdd =new Product(productName, description, price, quantity,"drink");
                     }
 
                     productService.addProductInMenu(currentUser, restaurant,productToAdd);
@@ -487,7 +487,8 @@ public class MenuService {
                         original.getName(),
                         original.getDescription(),
                         original.getPrice(),
-                        quantity
+                        quantity,
+                        original.getProductType()
                 );
                 produseComanda.add(produsComandat);
                 System.out.println("Added " + original.getName() + " x" + quantity);
