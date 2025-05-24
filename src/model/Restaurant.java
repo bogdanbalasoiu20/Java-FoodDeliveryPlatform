@@ -1,8 +1,7 @@
 package model;
 import service.ReviewRestaurantService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class Restaurant {
@@ -12,6 +11,7 @@ public class Restaurant {
     private String address;
     private String phoneNumber;
     private List<Product> products;
+    private static final repository.ProductRepository productRepo = new  repository.ProductRepository();
 
     public Restaurant(String name, String city, String address, String phoneNumber) {
         this.name = name;
@@ -71,42 +71,44 @@ public class Restaurant {
 
 
     public List<Product> showMenu() {
-        List<Product> displayedProducts = new ArrayList<>();
+        List<Product> allProducts = productRepo.findAllByRestaurantId(this.id);
 
-        if(products.isEmpty()){
+        if(allProducts.isEmpty()){
             System.out.println("No products available");
-        } else {
-            int index = 0;
+            return Collections.emptyList();
+        }
+        List<Product> displayedProducts =new ArrayList<>();
+        int index = 0;
 
-            System.out.println("\n---- Main Course ----");
-            for(Product p : products){
-                if(p.getProductType().equalsIgnoreCase("main_course")){
-                    System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
-                    System.out.println(p.getDescription());
-                    displayedProducts.add(p);
-                }
-            }
-
-            System.out.println("\n---- Deserts ----");
-            for(Product p : products){
-                if(p.getProductType().equalsIgnoreCase("desert")){
-                    System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
-                    System.out.println(p.getDescription());
-                    displayedProducts.add(p);
-                }
-            }
-
-            System.out.println("\n---- Drinks ----");
-            for(Product p : products){
-                if(p.getProductType().equalsIgnoreCase("drink")){
-                    System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
-                    System.out.println(p.getDescription());
-                    displayedProducts.add(p);
-                }
+        System.out.println("\n---- Main Course ----");
+        for(Product p : allProducts){
+            if(p.getProductType().equalsIgnoreCase("main_course")){
+                System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
+                System.out.println(p.getDescription());
+                displayedProducts.add(p);
             }
         }
 
-        return displayedProducts;
+        System.out.println("\n---- Deserts ----");
+        for(Product p : allProducts){
+            if(p.getProductType().equalsIgnoreCase("desert")){
+                System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
+                System.out.println(p.getDescription());
+                displayedProducts.add(p);
+            }
+        }
+
+        System.out.println("\n---- Drinks ----");
+        for(Product p : allProducts){
+            if(p.getProductType().equalsIgnoreCase("drink")){
+                System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
+                System.out.println(p.getDescription());
+                displayedProducts.add(p);
+            }
+        }
+
+
+    return displayedProducts;
     }
 
 

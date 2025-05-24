@@ -7,7 +7,6 @@ public class Product {
     private int quantity;
     private String productType;
     private int id;
-    private static int counter=0;
 
     public Product(String name, String description, double price, int quantity,String productType) {
         this.name = name;
@@ -15,11 +14,14 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
         this.productType = productType;
-        this.id=++counter;
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getQuantity() {

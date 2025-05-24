@@ -10,8 +10,12 @@ public class ProductService {
 
     public void addProductInMenu(User user, Restaurant restaurant, Product product){
         if(user instanceof Admin && restaurant != null && product != null){
-            productRepo.save(product, restaurant.getId());
-            System.out.println("Product '" + product.getName() + "' added successfully to '" + restaurant.getName() + "'!");
+            if(!productRepo.existsByNameAndRestaurantId(product.getName(), restaurant.getId())){
+                productRepo.save(product, restaurant.getId());
+                System.out.println("Product '" + product.getName() + "' added successfully to '" + restaurant.getName() + "'!");
+            }else{
+                System.out.println("Product '" + product.getName() + "' already exists in restaurant '" + restaurant.getName() + "'!");
+            }
         }
     }
 
