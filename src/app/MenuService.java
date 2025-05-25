@@ -387,10 +387,6 @@ public class MenuService {
 
 
     private void productMenu(Restaurant restaurant) {
-        if (restaurant.getProducts().isEmpty()) {
-            System.out.println("No products available.");
-            return;
-        }
 
         while (true) {
             System.out.println("\n0. Back" +

@@ -4,7 +4,6 @@ import java.sql.SQLOutput;
 
 public abstract class User {
     private int id;
-    private static int counter=0;
     private String name;
     private String email;
     private String password;
@@ -14,7 +13,6 @@ public abstract class User {
     private String address;
 
     public User(String name, String email, String password, String phoneNumber, String country, String city, String address) {
-        this.id=++counter;
         this.name=name;
         this.email=email;
         this.password=password;
@@ -27,6 +25,10 @@ public abstract class User {
     public User(){}
 
     public int getId(){ return id;}
+
+    public void setId(int id){
+        this.id=id;
+    }
 
     public String getName() {
         return name;
