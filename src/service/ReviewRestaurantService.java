@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import model.Restaurant;
 import model.User;
 import model.ReviewRestaurant;
+import repository.ReviewRestaurantRepository;
+
 public class ReviewRestaurantService {
-    private Map<Restaurant, List<ReviewRestaurant>> reviewPerRestaurant= new HashMap<>();
+    ReviewRestaurantRepository reviewRestRepo = new ReviewRestaurantRepository();
 
     public void addReview(ReviewRestaurant reviewRestaurant){
-        Restaurant restaurant = reviewRestaurant.getRestaurant();
-        reviewPerRestaurant.putIfAbsent(restaurant, new ArrayList<>());
-        reviewPerRestaurant.get(restaurant).add(reviewRestaurant);
+        reviewRestRepo.save(reviewRestaurant);
         System.out.println("Review posted successfully");
     }
 
     public void showAllReviews(Restaurant restaurant){
-        List <ReviewRestaurant> reviews =reviewPerRestaurant.get(restaurant);
+        List <ReviewRestaurant> reviews = reviewRestRepo.findAllByRestaurant(restaurant);
 
         if(reviews==null||reviews.isEmpty()){
             System.out.println("\nNo reviews found");
@@ -33,7 +33,7 @@ public class ReviewRestaurantService {
 
 
     public double meanRating(Restaurant restaurant){
-        List<ReviewRestaurant> reviews = reviewPerRestaurant.get(restaurant);
+        List<ReviewRestaurant> reviews = reviewRestRepo.findAllByRestaurant(restaurant);
         if(reviews == null || reviews.isEmpty()) {
             return 0;
         }

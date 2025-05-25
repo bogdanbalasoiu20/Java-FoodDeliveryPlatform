@@ -161,4 +161,65 @@ public class UserRepository {
     }
 
 
+    public Client findClientById(int id){
+        String sql="SELECT * FROM client WHERE id=?";
+
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+
+            ps.setInt(1,id);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                Client client = new Client(
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone_number"),
+                        rs.getString("country"),
+                        rs.getString("city"),
+                        rs.getString("address")
+                );
+                client.setId(id);
+                return client;
+            }
+
+        }catch(SQLException e){
+            System.out.println("Error retriving user id: "+e.getMessage());
+        }
+        return null;
+    }
+
+
+    public Admin findAdminById(int id) {
+        String sql = "SELECT * FROM admin WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Admin admin = new Admin(
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone_number"),
+                        rs.getString("country"),
+                        rs.getString("city"),
+                        rs.getString("address")
+                );
+                admin.setId(id);
+                return admin;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error finding admin by ID: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+
+
 }
