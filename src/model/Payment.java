@@ -4,14 +4,12 @@ import java.time.LocalDateTime;
 
 public class Payment {
     private int id;
-    private static int counter=0;
     private Order order;
     private LocalDateTime paymentDate;
     private double totalPrice;
     private PaymentMethod paymentMethod;
 
     public Payment(Order order,PaymentMethod paymentMethod){
-        this.id=++counter;
         this.order=order;
         this.paymentDate=LocalDateTime.now();
         this.paymentMethod=paymentMethod;
@@ -20,6 +18,10 @@ public class Payment {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id){
+        this.id=id;
     }
 
     public PaymentMethod getPaymentMethod() {

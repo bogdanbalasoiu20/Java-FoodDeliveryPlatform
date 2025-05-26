@@ -35,6 +35,10 @@ public class Order {
         return id;
     }
 
+    public void setId(int id){
+        this.id=id;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -45,6 +49,14 @@ public class Order {
 
     public Restaurant getRestaurant() {
         return restaurant;
+    }
+
+    public User getClient(){
+        return this.client;
+    }
+
+    public List<Product> getProducts(){
+        return this.products;
     }
 
 

@@ -102,4 +102,29 @@ public class RestaurantRepository {
         }
         return -1;
     }
+
+
+    public Restaurant findById(int restaurantId){
+        String sql ="SELECT * FROM restaurant WHERE id=?";
+
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)){
+
+            ps.setInt(1,restaurantId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                Restaurant restaurant = new Restaurant(
+                    restaurantId,
+                    rs.getString("name"),
+                    rs.getString("city"),
+                    rs.getString("address"),
+                    rs.getString("phone_number")
+                );
+                return restaurant;
+            }
+        }catch(SQLException e){
+            System.out.println("Error  retrieving restaurant id: "+e.getMessage());
+        }
+        return null;
+    }
 }
