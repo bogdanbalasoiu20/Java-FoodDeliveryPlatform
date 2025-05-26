@@ -1,4 +1,5 @@
 package model;
+import repository.ProductRepository;
 import service.ReviewRestaurantService;
 
 import java.util.*;
@@ -11,7 +12,7 @@ public class Restaurant {
     private String address;
     private String phoneNumber;
     private List<Product> products;
-    private static final repository.ProductRepository productRepo = new  repository.ProductRepository();
+    private static final repository.ProductRepository productRepo = ProductRepository.getInstance();
 
     public Restaurant(String name, String city, String address, String phoneNumber) {
         this.name = name;

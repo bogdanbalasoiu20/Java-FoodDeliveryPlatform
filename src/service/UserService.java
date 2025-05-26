@@ -7,7 +7,7 @@ import java.util.List;
 import repository.UserRepository;
 
 public class UserService {
-    private final UserRepository userRepo = new UserRepository();
+    private final UserRepository userRepo = UserRepository.getInstance();
     private User current_user; //the user who is logged in
 
     //app register method

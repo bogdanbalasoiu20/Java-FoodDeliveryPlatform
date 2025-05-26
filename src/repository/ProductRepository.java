@@ -6,12 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProductRepository {
+public class ProductRepository extends GenericRepository<Product>{
+    private static ProductRepository instance;
+
+    private ProductRepository(){}
+
+    public static synchronized ProductRepository getInstance(){
+        if(instance == null){
+            instance = new ProductRepository();
+        }
+        return instance;
+    }
+
+
     public void save(Product product,int restaurantId){
         String sql = "INSERT INTO product(name, description, price, quantity, product_type, restaurant_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         try(Connection conn = DBConnection.getConnection();
-        PreparedStatement ps=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)){  //Statement.RETURN_GENERATED_KEYS spune id-ul generat in bd
+            PreparedStatement ps=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)){  //Statement.RETURN_GENERATED_KEYS spune id-ul generat in bd
                                                                                             //PrepareStatement evita SQL injection si e folosit pentru a inlocui ? cu valori reale
             ps.setString(1, product.getName());
             ps.setString(2, product.getDescription());

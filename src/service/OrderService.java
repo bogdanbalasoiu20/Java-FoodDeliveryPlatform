@@ -7,7 +7,7 @@ import java.util.*;
 import repository.OrderRepository;
 
 public class OrderService {
-    OrderRepository orderRepo = new OrderRepository();
+    OrderRepository orderRepo = OrderRepository.getInstance();
 
     public void placeOrder(User user,Order order){
         orderRepo.save(order);

@@ -4,11 +4,27 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.sql.*;
 
-public class OrderRepository {
+public class OrderRepository extends GenericRepository<Order>{
+    private static OrderRepository instance;
 
+    private OrderRepository(){}
+
+    public static synchronized OrderRepository getInstance(){
+        if(instance==null){
+            instance = new OrderRepository();
+        }
+        return instance;
+    }
+
+    @Override
     public void save(Order order){
         if (order.getClient() == null || order.getRestaurant() == null) {
             System.out.println("Invalid order: client or restaurant is null");
+            return;
+        }
+
+        if (!(order.getClient() instanceof Client)) {
+            System.out.println("Only clients can place orders.");
             return;
         }
 
@@ -72,8 +88,8 @@ public class OrderRepository {
             ps.setInt(1,user.getId());
             ResultSet rs = ps.executeQuery();
 
-            ProductRepository productRepo = new ProductRepository();
-            RestaurantRepository restaurantRepo = new RestaurantRepository();
+            ProductRepository productRepo = ProductRepository.getInstance();
+            RestaurantRepository restaurantRepo = RestaurantRepository.getInstance();
 
             while(rs.next()){
                 int orderId = rs.getInt("id");
@@ -81,7 +97,7 @@ public class OrderRepository {
                 String status = rs.getString("status");
 
                 Restaurant restaurant = restaurantRepo.findById(restaurantId);
-                List<Product> products = findProductsForOrder(conn,orderId);
+                List<Product> products = findProductsForOrder(orderId);
 
                 Order order = new Order(user,restaurant,products);
                 order.setId(orderId);
@@ -97,11 +113,20 @@ public class OrderRepository {
         return orders;
     }
 
-    private List<Product> findProductsForOrder(Connection conn, int orderId) throws SQLException {
-        String sql = "SELECT p.*, op.quantity FROM order_product op JOIN product p ON op.product_id = p.id WHERE op.order_id = ?";
+
+    private List<Product> findProductsForOrder(int orderId) {
+        String sql = """
+        SELECT p.*, op.quantity 
+        FROM order_product op 
+        JOIN product p ON op.product_id = p.id 
+        WHERE op.order_id = ?
+    """;
+
         List<Product> products = new ArrayList<>();
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
 
@@ -117,9 +142,13 @@ public class OrderRepository {
                 product.setId(rs.getInt("id"));
                 products.add(product);
             }
+
+        } catch (SQLException e) {
+            System.out.println("Error retrieving order products: " + e.getMessage());
         }
 
         return products;
     }
+
 
 }

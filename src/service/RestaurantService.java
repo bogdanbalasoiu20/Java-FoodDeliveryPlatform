@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class RestaurantService{
-    private RestaurantRepository restaurantRepo = new RestaurantRepository();
+    private RestaurantRepository restaurantRepo = RestaurantRepository.getInstance();
 
     public void showRestaurants(){
         int index=1;

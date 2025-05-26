@@ -14,6 +14,7 @@ public class Main {
         RestaurantService restaurantService=new RestaurantService();
         ReviewRestaurantService reviewRestaurantService=new ReviewRestaurantService();
         ProductService productService=new ProductService();
+        PaymentService paymentService=new PaymentService();
 
 
         userService.registerAdmin("Bogdan","aa","aaAA11$$","0182912018","aa","aa","aaa");
@@ -48,7 +49,7 @@ public class Main {
         productService.addProductInMenu(user1,restaurant1,product7);
 
 
-        MenuService menuService = new MenuService(userService,orderService,restaurantService,productService,reviewRestaurantService);
+        MenuService menuService = new MenuService(userService,orderService,restaurantService,productService,reviewRestaurantService,paymentService);
         menuService.startApp();
     }
 }

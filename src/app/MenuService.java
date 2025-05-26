@@ -11,16 +11,18 @@ public class MenuService {
     private RestaurantService restaurantService;
     private ProductService productService;
     private ReviewRestaurantService reviewRestaurantService;
+    private PaymentService paymentService;
     private Scanner scanner;
     private List<Restaurant> sortedRestaurants;
 
 
-    public MenuService(UserService userservice, OrderService orderservice, RestaurantService restaurantservice, ProductService productservice, ReviewRestaurantService reviewRestaurantService) {
+    public MenuService(UserService userservice, OrderService orderservice, RestaurantService restaurantservice, ProductService productservice, ReviewRestaurantService reviewRestaurantService, PaymentService paymentService) {
         this.userService=userservice;
         this.orderService=orderservice;
         this.restaurantService=restaurantservice;
         this.productService=productservice;
         this.reviewRestaurantService=reviewRestaurantService;
+        this.paymentService=paymentService;
         this.scanner=new Scanner(System.in);
         this.sortedRestaurants=null;
     }
@@ -454,12 +456,12 @@ public class MenuService {
 
     private List<Product> buildOrderProducts(Restaurant restaurant) {
         List<Product> produseComanda = new ArrayList<>();
-        List<Product> meniu = restaurant.getProducts();
+        List<Product> meniu = new ArrayList<>();
 
         boolean adding = true;
         while (adding) {
             System.out.println("\n--- " + restaurant.getName() + " Menu ---");
-            restaurant.showMenu();
+            meniu=restaurant.showMenu();
 
             if (produseComanda.size() > 0) {
                 System.out.println("0. Place order");
@@ -486,6 +488,7 @@ public class MenuService {
                         quantity,
                         original.getProductType()
                 );
+                produsComandat.setId(original.getId());
                 produseComanda.add(produsComandat);
                 System.out.println("Added " + original.getName() + " x" + quantity);
             } else {
@@ -535,6 +538,7 @@ public class MenuService {
         }
 
         Payment payment = new Payment(comanda, metodaPlata);
+        paymentService.processPayment(payment);
         System.out.println("\nPayment successful!");
         payment.paymentDetails();
         comanda.setStatus("Paid");

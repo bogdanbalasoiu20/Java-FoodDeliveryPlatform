@@ -6,7 +6,7 @@ import model.Admin;
 import repository.ProductRepository;
 
 public class ProductService {
-    private ProductRepository productRepo = new ProductRepository();
+    private ProductRepository productRepo = ProductRepository.getInstance();
 
     public void addProductInMenu(User user, Restaurant restaurant, Product product){
         if(user instanceof Admin && restaurant != null && product != null){

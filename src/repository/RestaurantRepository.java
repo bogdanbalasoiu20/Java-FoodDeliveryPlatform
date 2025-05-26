@@ -6,7 +6,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestaurantRepository {
+public class RestaurantRepository extends GenericRepository<Restaurant>{
+    private static RestaurantRepository instance;
+
+    private RestaurantRepository(){}
+
+    public static synchronized RestaurantRepository getInstance(){
+        if(instance==null){
+            instance = new RestaurantRepository();
+        }
+        return instance;
+    }
 
     public void save(Restaurant restaurant){
         String sql = "INSERT INTO restaurant(name, city, address, phone_number) VALUES (?, ?, ?, ?)";
@@ -73,7 +83,7 @@ public class RestaurantRepository {
 
     public boolean existsByName(String name){
         String sql="SELECT 1 FROM restaurant WHERE name = ?";
-        try(Connection conn=DBConnection.getConnection();
+        try(Connection conn = DBConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)){
 
             ps.setString(1,name);

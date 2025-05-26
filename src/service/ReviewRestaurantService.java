@@ -8,7 +8,7 @@ import model.ReviewRestaurant;
 import repository.ReviewRestaurantRepository;
 
 public class ReviewRestaurantService {
-    ReviewRestaurantRepository reviewRestRepo = new ReviewRestaurantRepository();
+    ReviewRestaurantRepository reviewRestRepo = ReviewRestaurantRepository.getInstance();
 
     public void addReview(ReviewRestaurant reviewRestaurant){
         reviewRestRepo.save(reviewRestaurant);

@@ -6,12 +6,22 @@ import model.Admin;
 import model.Client;
 
 
-public class UserRepository {
+public class UserRepository extends GenericRepository<User>{
+    private static UserRepository instance;
+
+    private UserRepository(){}
+
+    public static synchronized UserRepository getInstance(){
+        if(instance==null){
+            instance=new UserRepository();
+        }
+        return instance;
+    }
 
     public void saveClient(Client client){
         String sql="INSERT INTO client(name,email,password,phone_number,country,city,address) VALUES (?,?,?,?,?,?,?)";
 
-        try(Connection conn =DBConnection.getConnection();
+        try(Connection conn = DBConnection.getConnection();
             PreparedStatement ps=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);){
 
             ps.setString(1,client.getName());
@@ -39,7 +49,7 @@ public class UserRepository {
     public void saveAdmin(Admin admin){
         String sql="INSERT INTO admin(name,email,password,phone_number,country,city,address) VALUES (?,?,?,?,?,?,?)";
 
-        try(Connection conn =DBConnection.getConnection();
+        try(Connection conn = DBConnection.getConnection();
             PreparedStatement ps=conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);){
 
             ps.setString(1,admin.getName());
