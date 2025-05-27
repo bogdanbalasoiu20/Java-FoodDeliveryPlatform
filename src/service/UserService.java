@@ -8,6 +8,7 @@ import repository.UserRepository;
 
 public class UserService {
     private final UserRepository userRepo = UserRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
     private User current_user; //the user who is logged in
 
     //app register method
@@ -18,6 +19,8 @@ public class UserService {
             Client client=new Client(name,email,password,phoneNumber,country,city,address);
             userRepo.saveClient(client);
             System.out.println("Account successfully created\n");
+            auditService.logAction("Account with email "+email+" SUCCESSFULLY CREATED\n");
+
         }
     }
 
@@ -26,12 +29,14 @@ public class UserService {
             Admin admin=new Admin(name, email,password,phoneNumber,country,city,address);
             userRepo.saveAdmin(admin);
             System.out.println("Admin successfully created\n");
+            auditService.logAction(("Admin with email "+email+" SUCCESSFULLY CREATED\n"));
         }
     }
 
     public boolean checkEmail(String email){
         if(userRepo.existsByEmail(email)){
             System.out.println("The email is already in use\n");
+            auditService.logAction("The email "+email+ "is ALREADY IN USE\n");
             return false;
         }
         return true;
@@ -54,6 +59,7 @@ public class UserService {
         User user = userRepo.findByEmailAndPassword(email,password);
         if(user!=null){
             System.out.println("Hello, " + user.getName() + "! You have successfully logged in");
+            auditService.logAction("LOGIN "+user.getName());
             current_user=user;
         }else{
             System.out.println("Invalid email or password");
@@ -64,6 +70,7 @@ public class UserService {
     public void logout(){
         if(current_user!=null){
             System.out.println("You have successfully logged out! See you next time, "+current_user.getName()+"!");
+            auditService.logAction("LOGOUT "+current_user.getName());
             current_user=null;
         }
         else{

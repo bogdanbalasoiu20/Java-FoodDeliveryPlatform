@@ -7,10 +7,12 @@ import java.util.*;
 import repository.OrderRepository;
 
 public class OrderService {
-    OrderRepository orderRepo = OrderRepository.getInstance();
+    private final OrderRepository orderRepo = OrderRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
 
     public void placeOrder(User user,Order order){
         orderRepo.save(order);
+        auditService.logAction("Order Placed successfully for user '"+user.getName()+"'");
         order.orderDetails();
     }
 
@@ -18,6 +20,7 @@ public class OrderService {
         List<Order> orders=orderRepo.findAllByUser(user);
         if(orders==null||orders.isEmpty()){
             System.out.println("No order has been placed yet");
+            auditService.logAction("No order has been placed yet for user '"+user.getName()+"'");
             return;
         }
 

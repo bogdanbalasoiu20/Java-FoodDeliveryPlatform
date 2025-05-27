@@ -8,11 +8,13 @@ import model.ReviewRestaurant;
 import repository.ReviewRestaurantRepository;
 
 public class ReviewRestaurantService {
-    ReviewRestaurantRepository reviewRestRepo = ReviewRestaurantRepository.getInstance();
+    private final ReviewRestaurantRepository reviewRestRepo = ReviewRestaurantRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
 
     public void addReview(ReviewRestaurant reviewRestaurant){
         reviewRestRepo.save(reviewRestaurant);
         System.out.println("Review posted successfully");
+        auditService.logAction("Review posted successfully for restaurant "+reviewRestaurant.getRestaurant().getName());
     }
 
     public void showAllReviews(Restaurant restaurant){
@@ -20,6 +22,7 @@ public class ReviewRestaurantService {
 
         if(reviews==null||reviews.isEmpty()){
             System.out.println("\nNo reviews found");
+            auditService.logAction("No reviews found for restaurant "+restaurant.getName());
             return;
         }
 

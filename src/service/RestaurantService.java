@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class RestaurantService{
-    private RestaurantRepository restaurantRepo = RestaurantRepository.getInstance();
+    private final RestaurantRepository restaurantRepo = RestaurantRepository.getInstance();
+    private final AuditService auditService = AuditService.getInstance();
 
     public void showRestaurants(){
         int index=1;
         List<Restaurant> restaurants = restaurantRepo.findAll();
+        auditService.logAction("Show Restaurants");
         System.out.println("\nAll restaurants:\n");
         for(Restaurant r:restaurants){
             System.out.println("----------------");
@@ -27,10 +29,11 @@ public class RestaurantService{
             if(!restaurantRepo.existsByName(restaurant.getName())){
                 restaurantRepo.save(restaurant);
                 System.out.println("Restaurant '"+restaurant.getName()+"' has been added successfully");
+                auditService.logAction("Restaurant '"+restaurant.getName()+"' has been ADDED SUCCESSFULLY");
             }else{
                 int id=restaurantRepo.getIdByName(restaurant.getName());
                 restaurant.setId(id);
-                System.out.println("Restaurant '"+restaurant.getName()+"' already exists");
+                System.out.println("Restaurant '"+restaurant.getName()+"' ALREADY EXISTS");
             }
         }
     }
@@ -39,6 +42,7 @@ public class RestaurantService{
         if(user instanceof Admin){
             if(restaurant!=null){
                 restaurantRepo.delete(restaurant.getId());
+                auditService.logAction("Restaurant '"+restaurant.getName()+"' REMOVED successfully");
             }
         }
     }
