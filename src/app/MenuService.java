@@ -315,7 +315,7 @@ public class MenuService {
     private Restaurant chooseRestaurant() {
         List<Restaurant> restaurants = (sortedRestaurants != null)
                 ? sortedRestaurants
-                : new ArrayList<>(restaurantService.getRestaurants());
+                : restaurantService.getRestaurants();
 
         if (restaurants.isEmpty()) {
             System.out.println("No restaurants available.");

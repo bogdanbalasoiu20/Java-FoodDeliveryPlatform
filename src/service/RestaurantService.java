@@ -47,8 +47,8 @@ public class RestaurantService{
         }
     }
 
-    public Set<Restaurant> getRestaurants(){
-        return new HashSet<>(restaurantRepo.findAll());
+    public List<Restaurant> getRestaurants(){
+        return restaurantRepo.findAll();
     }
 
 

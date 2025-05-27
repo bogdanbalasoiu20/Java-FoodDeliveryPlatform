@@ -29,14 +29,14 @@ public class UserService {
             Admin admin=new Admin(name, email,password,phoneNumber,country,city,address);
             userRepo.saveAdmin(admin);
             System.out.println("Admin successfully created\n");
-            auditService.logAction(("Admin with email "+email+" SUCCESSFULLY CREATED\n"));
+            auditService.logAction(("Admin with email "+email+" SUCCESSFULLY CREATED"));
         }
     }
 
     public boolean checkEmail(String email){
         if(userRepo.existsByEmail(email)){
             System.out.println("The email is already in use\n");
-            auditService.logAction("The email "+email+ "is ALREADY IN USE\n");
+            auditService.logAction("The email "+email+ "is ALREADY IN USE");
             return false;
         }
         return true;

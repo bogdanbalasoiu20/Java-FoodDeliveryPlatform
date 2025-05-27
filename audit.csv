@@ -15,3 +15,62 @@ Show Restaurants,2025-05-27 16:16:53
 Show Restaurants,2025-05-27 16:17:02
 Restaurant 'restaurant test audit' REMOVED successfully,2025-05-27 16:17:08
 Show Restaurants,2025-05-27 16:17:24
+The email aais ALREADY IN USE
+,2025-05-27 16:31:17
+LOGIN Bogdan,2025-05-27 16:31:52
+No order has been placed yet for user 'Bogdan',2025-05-27 16:32:00
+Restaurant 'test' has been ADDED SUCCESSFULLY,2025-05-27 16:32:14
+Show Restaurants,2025-05-27 16:32:21
+Show Restaurants,2025-05-27 16:32:25
+Show Restaurants,2025-05-27 16:32:58
+Product 'testProdus' ADDED successfully to 'test'!,2025-05-27 16:33:00
+No order has been placed yet for user 'Bogdan',2025-05-27 16:33:08
+Show Restaurants,2025-05-27 16:33:12
+Show Restaurants,2025-05-27 16:33:15
+Order Placed successfully for user 'Bogdan',2025-05-27 16:34:29
+Payment PROCESSED successfully for order 1,2025-05-27 16:34:42
+LOGOUT Bogdan,2025-05-27 16:35:15
+LOGIN bogdan,2025-05-27 16:35:24
+Show Restaurants,2025-05-27 16:35:27
+Show Restaurants,2025-05-27 16:35:30
+Show Restaurants,2025-05-27 16:35:38
+Order Placed successfully for user 'bogdan',2025-05-27 16:35:57
+Payment PROCESSED successfully for order 9,2025-05-27 16:36:04
+The email aais ALREADY IN USE
+,2025-05-27 16:58:37
+LOGIN bogdan,2025-05-27 16:58:44
+Show Restaurants,2025-05-27 16:58:46
+Show Restaurants,2025-05-27 16:58:48
+Order Placed successfully for user 'bogdan',2025-05-27 16:59:08
+Payment PROCESSED successfully for order 10,2025-05-27 16:59:16
+The email aais ALREADY IN USE
+,2025-05-27 17:00:12
+LOGIN bogdan,2025-05-27 17:00:19
+Show Restaurants,2025-05-27 17:00:22
+Show Restaurants,2025-05-27 17:00:24
+Order Placed successfully for user 'bogdan',2025-05-27 17:00:40
+Payment PROCESSED successfully for order 11,2025-05-27 17:00:43
+The email aais ALREADY IN USE,2025-05-27 17:12:30
+LOGIN bogdan,2025-05-27 17:12:39
+Show Restaurants,2025-05-27 17:12:43
+Show Restaurants,2025-05-27 17:12:45
+Order Placed successfully for user 'bogdan',2025-05-27 17:13:01
+Payment PROCESSED successfully for order 12,2025-05-27 17:13:09
+Show Restaurants,2025-05-27 17:17:34
+Show Restaurants,2025-05-27 17:17:37
+Order Placed successfully for user 'bogdan',2025-05-27 17:18:04
+Payment PROCESSED successfully for order 13,2025-05-27 17:18:18
+Show Restaurants,2025-05-27 17:18:47
+Show Restaurants,2025-05-27 17:18:50
+No reviews found for restaurant test,2025-05-27 17:18:56
+Review posted successfully for restaurant test,2025-05-27 17:19:05
+LOGOUT bogdan,2025-05-27 17:20:02
+LOGIN Bogdan,2025-05-27 17:20:08
+Show Restaurants,2025-05-27 17:20:15
+Product testProdus REMOVED successfully from restaurant 'test'!,2025-05-27 17:20:37
+Show Restaurants,2025-05-27 17:20:53
+The email aais ALREADY IN USE,2025-05-27 17:41:10
+LOGIN bogdan,2025-05-27 17:41:20
+Show Restaurants,2025-05-27 17:41:38
+Show Restaurants,2025-05-27 17:41:41
+Review posted successfully for restaurant Beraria H,2025-05-27 17:42:26

@@ -78,40 +78,40 @@ public class OrderRepository extends GenericRepository<Order>{
     }
 
 
-    public List<Order> findAllByUser(User user){
+    public List<Order> findAllByUser(User user) {
         String sql = "SELECT * FROM food_order WHERE client_id=?";
-        List <Order> orders = new ArrayList<>();
+        List<Order> orders = new ArrayList<>();
 
-        try(Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1,user.getId());
+            ps.setInt(1, user.getId());
             ResultSet rs = ps.executeQuery();
 
             ProductRepository productRepo = ProductRepository.getInstance();
             RestaurantRepository restaurantRepo = RestaurantRepository.getInstance();
 
-            while(rs.next()){
+            while (rs.next()) {
                 int orderId = rs.getInt("id");
                 int restaurantId = rs.getInt("restaurant_id");
                 String status = rs.getString("status");
+                double totalPrice = rs.getDouble("total_price");
+                LocalDateTime orderDate = rs.getTimestamp("order_date").toLocalDateTime();
 
                 Restaurant restaurant = restaurantRepo.findById(restaurantId);
                 List<Product> products = findProductsForOrder(orderId);
 
-                Order order = new Order(user,restaurant,products);
-                order.setId(orderId);
-                order.setStatus(status);
-
+                Order order = new Order(orderId, user, restaurant, products, totalPrice, orderDate, status);
                 orders.add(order);
             }
 
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error in getting all food orders: " + e.getMessage());
         }
 
         return orders;
     }
+
 
 
     private List<Product> findProductsForOrder(int orderId) {

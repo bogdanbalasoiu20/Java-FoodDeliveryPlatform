@@ -23,6 +23,16 @@ public class Order {
         this.status="Pending";
     }
 
+    public Order(int id, User client, Restaurant restaurant, List<Product> products, double totalPrice, LocalDateTime orderDate, String status) {
+        this.id = id;
+        this.client = client;
+        this.restaurant = restaurant;
+        this.products = products;
+        this.totalPrice = totalPrice;
+        this.orderDate = orderDate;
+        this.status = status;
+    }
+
     public double sumToPay(){
         double total=0;
         for(Product p:products){
