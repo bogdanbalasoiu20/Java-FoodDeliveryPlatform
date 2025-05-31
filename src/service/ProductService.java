@@ -38,9 +38,10 @@ public class ProductService {
             return;
         }
 
-        System.out.println("\nChoose an unavailable product to make available:");
-        for(Product p : products){
-            System.out.println("\n"+p.getName()+" -  "+p.getPrice()+" - "+p.getProductType());
+        System.out.println("\nUnavailable products:");
+        int index=1;
+        for(Product p:products){
+            System.out.println("\n"+index+". "+p.getName()+" -  "+p.getPrice()+" - "+p.getProductType());
         }
     }
 
@@ -52,6 +53,24 @@ public class ProductService {
             auditService.logAction("Product '" + product.getName() + "' made available");
         }
     }
+
+    public List<Product> unavailableProduct(User user, Restaurant restaurant) {
+        List<Product> products = new ArrayList<>();
+        if (user instanceof Admin && restaurant != null) {
+            products = productRepo.findUnavailableByRestaurantId(restaurant.getId());
+        }
+        return products;
+    }
+
+
+    public void showBestSellingProductWithRestaurant() {
+        String result = productRepo.findBestSellingProductWithRestaurant();
+        System.out.println(result);
+        auditService.logAction("Viewed best selling product with restaurant info");
+    }
+
+
+
 
 
 }

@@ -169,5 +169,53 @@ public class ProductRepository extends GenericRepository<Product>{
     }
 
 
+    public String findBestSellingProductWithRestaurant() {
+        String sql = """
+        SELECT p.name AS product_name,
+               p.description,
+               p.price,
+               p.product_type,
+               r.name AS restaurant_name,
+               r.city,
+               r.address,
+               SUM(op.quantity) AS total_sold
+        FROM order_product op
+        JOIN product p ON op.product_id = p.id
+        JOIN restaurant r ON p.restaurant_id = r.id
+        GROUP BY p.id, r.id
+        ORDER BY total_sold DESC
+        LIMIT 1
+    """;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                String productName = rs.getString("product_name");
+                String description = rs.getString("description");
+                double price = rs.getDouble("price");
+                String type = rs.getString("product_type");
+                String restaurantName = rs.getString("restaurant_name");
+                String city = rs.getString("city");
+                String address = rs.getString("address");
+                int totalSold = rs.getInt("total_sold");
+
+                return "\nBest selling product: " + productName +
+                        " - " + price + " lei (" + type + ")\n" +
+                        "Restaurant:           " + restaurantName + " (" + city + ", " + address + ")\n" +
+                        "Units sold:           " + totalSold;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error retrieving best selling product: " + e.getMessage());
+        }
+
+        return "\nNo sales data available.";
+    }
+
+
+
+
 
 }

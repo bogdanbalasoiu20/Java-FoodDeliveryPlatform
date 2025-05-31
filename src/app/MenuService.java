@@ -175,7 +175,8 @@ public class MenuService {
                             "\n5. Add restaurant" +
                                     "\n6. Add product" +
                                     "\n7. Remove product" +
-                                    "\n8. Remove restaurant" : "") +
+                                    "\n8. Remove restaurant" +
+                                    "\n9. Stats ": "") +
                     "\n0. Back");
 
             int choice = readInt("Choose an option: ");
@@ -227,8 +228,8 @@ public class MenuService {
                     }
 
                     System.out.println("\n---- Add a new product ----");
-                    System.out.println("\n1.New Product+" +
-                                       "2.See unavaible products");
+                    System.out.println("\n1.New Product" +
+                                       "\n2.See unavailable products");
 
                     int choice2= readInt("Choose an option: ");
 
@@ -243,30 +244,18 @@ public class MenuService {
                         }
 
 
-                        List<Product> unavailableProducts = productRepo.findUnavailableByRestaurantId(restaurant.getId());
+                        List<Product> unavailableProducts = productService.unavailableProduct(currentUser, restaurant);
 
-                        if (unavailableProducts.isEmpty()) {
-                            System.out.println("No unavailable products.");
-                            break;
-                        }
+                        productService.showUnavailebleProducts(restaurant);
 
-                        System.out.println("\nUnavailable Products:");
-                        for (int i = 0; i < unavailableProducts.size(); i++) {
-                            Product p = unavailableProducts.get(i);
-                            System.out.println((i + 1) + ". " + p.getName() + " - " + p.getPrice() + " lei (" + p.getProductType() + ")");
-                        }
-
-                        int idx = readInt("Select a product to mark as available (0 to cancel): ");
+                        int idx = readInt("\nSelect a product to mark as available (0 to cancel): ");
                         if (idx > 0 && idx <= unavailableProducts.size()) {
                             Product selected = unavailableProducts.get(idx - 1);
                             productService.makeProductAvailable(currentUser, restaurant, selected);
                         } else {
-                            System.out.println("Cancelled or invalid option.");
+                            System.out.println("\nCancelled or invalid option.");
                         }
                     }
-
-
-
 
                     break;
 
@@ -316,6 +305,25 @@ public class MenuService {
 
                     restaurantService.removeRestaurant(currentUser, restaurant3);
                     break;
+
+                case 9:
+                    if (!isAdmin) {
+                        System.out.println("Invalid option.");
+                        break;
+                    }
+
+                    System.out.println("\n---- Statistics ----");
+                    productService.showBestSellingProductWithRestaurant();
+
+                    List<Restaurant> restaurants = restaurantService.getRestaurantsSortedByRating(reviewRestaurantService);
+                    Restaurant bestRatingRestaurant = restaurants.get(0);
+                    double ratingRestaurnat= reviewRestaurantService.meanRating(bestRatingRestaurant);
+                    System.out.println("\nRestaurant with best rating: "+bestRatingRestaurant.getName()+" (Rating: "+ratingRestaurnat+"/5)"+
+                                       "\n                             "+bestRatingRestaurant.getCity()+
+                                       "\n                             "+bestRatingRestaurant.getAddress()+
+                                       "\n                             "+bestRatingRestaurant.getPhoneNumber());
+                    break;
+
                 case 0:
                     inMainMenu = false;
                     break;
