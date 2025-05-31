@@ -137,7 +137,8 @@ public class OrderRepository extends GenericRepository<Order>{
                         rs.getString("description"),
                         rs.getDouble("price"),
                         orderedQuantity,
-                        rs.getString("product_type")
+                        rs.getString("product_type"),
+                        rs.getBoolean("available")
                 );
                 product.setId(rs.getInt("id"));
                 products.add(product);

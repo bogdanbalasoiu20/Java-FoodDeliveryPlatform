@@ -7,13 +7,15 @@ public class Product {
     private int quantity;
     private String productType;
     private int id;
+    private boolean available=true;
 
-    public Product(String name, String description, double price, int quantity,String productType) {
+    public Product(String name, String description, double price, int quantity,String productType,boolean available) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.productType = productType;
+        this.available=available;
     }
 
     public int getId() {
@@ -42,6 +44,14 @@ public class Product {
 
     public String getProductType(){
         return productType;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     public String toString(){

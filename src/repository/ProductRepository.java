@@ -48,8 +48,8 @@ public class ProductRepository extends GenericRepository<Product>{
 
     }
 
-    public void delete(String productName, int restaurantId){
-        String sql = "DELETE FROM product WHERE name = ? and restaurant_id = ?";
+    public void disableProduct(String productName, int restaurantId){
+        String sql = "UPDATE product SET available = false WHERE name = ? and restaurant_id = ?";
 
 
         try(Connection conn = DBConnection.getConnection();
@@ -59,7 +59,7 @@ public class ProductRepository extends GenericRepository<Product>{
             ps.setInt(2,restaurantId);
             int rows = ps.executeUpdate();  //intoarce cate randuri au fost afectate
             if(rows>0){
-                System.out.println("Product removed successfully from database!");
+                System.out.println("Product marked as unavailable!");
             }else{
                 System.out.println("Product not found in database!");
             }
@@ -103,7 +103,8 @@ public class ProductRepository extends GenericRepository<Product>{
                         rs.getString("description"),
                         rs.getDouble("price"),
                         rs.getInt("quantity"),
-                        rs.getString("product_type")
+                        rs.getString("product_type"),
+                        rs.getBoolean("available")
                 );
                 p.setId(rs.getInt("id"));  //setez id-ul generat in bd
                 products.add(p);
@@ -114,5 +115,59 @@ public class ProductRepository extends GenericRepository<Product>{
         }
         return products;
     }
+
+    public List<Product> findUnavailableByRestaurantId(int restaurantId) {
+        String sql = "SELECT * FROM product WHERE restaurant_id=? AND available=false";
+        List<Product> products = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, restaurantId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Product p = new Product(
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("quantity"),
+                        rs.getString("product_type"),
+                        rs.getBoolean("available")
+                );
+                p.setId(rs.getInt("id"));
+                products.add(p);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error checking product availability: " + e.getMessage());
+        }
+
+        return products;
+    }
+
+
+    public void markAsAvailable(String productName, int restaurantId) {
+        String sql = "UPDATE product SET available = true WHERE name = ? AND restaurant_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, productName);
+            ps.setInt(2, restaurantId);
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Product marked as available!");
+            } else {
+                System.out.println("Product not found in database!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error marking product as available: " + e.getMessage());
+        }
+    }
+
+
 
 }

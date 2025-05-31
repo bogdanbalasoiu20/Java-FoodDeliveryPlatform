@@ -1,5 +1,6 @@
 package app;
 import model.*;
+import repository.ProductRepository;
 import service.*;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -226,33 +227,47 @@ public class MenuService {
                     }
 
                     System.out.println("\n---- Add a new product ----");
-                    System.out.print("Name: ");
-                    String productName = scanner.nextLine();
-                    System.out.print("Description: ");
-                    String description = scanner.nextLine();
-                    double price = readDouble("Price: ");
-                    int quantity = readInt("Quantity: ");
-                    int category = readInt("Category: \n1.Main Course\n2.Desert\n3.Drink\nChoose category:");
+                    System.out.println("\n1.New Product+" +
+                                       "2.See unavaible products");
 
-                    restaurantService.showRestaurants();
-                    Restaurant restaurant = chooseRestaurant();
-                    if (restaurant == null) {
-                        System.out.println("Invalid restaurant selected.");
-                        break;
+                    int choice2= readInt("Choose an option: ");
+
+                    if(choice2==1){
+                        addNewProduct(currentUser);
+                    }else if (choice2 == 2) {
+                        restaurantService.showRestaurants();
+                        Restaurant restaurant = chooseRestaurant();
+                        if (restaurant == null) {
+                            System.out.println("Invalid restaurant selected.");
+                            break;
+                        }
+
+
+                        List<Product> unavailableProducts = productRepo.findUnavailableByRestaurantId(restaurant.getId());
+
+                        if (unavailableProducts.isEmpty()) {
+                            System.out.println("No unavailable products.");
+                            break;
+                        }
+
+                        System.out.println("\nUnavailable Products:");
+                        for (int i = 0; i < unavailableProducts.size(); i++) {
+                            Product p = unavailableProducts.get(i);
+                            System.out.println((i + 1) + ". " + p.getName() + " - " + p.getPrice() + " lei (" + p.getProductType() + ")");
+                        }
+
+                        int idx = readInt("Select a product to mark as available (0 to cancel): ");
+                        if (idx > 0 && idx <= unavailableProducts.size()) {
+                            Product selected = unavailableProducts.get(idx - 1);
+                            productService.makeProductAvailable(currentUser, restaurant, selected);
+                        } else {
+                            System.out.println("Cancelled or invalid option.");
+                        }
                     }
 
-                    Product productToAdd;
-                    if(category == 1){
-                        productToAdd =new Product(productName, description, price, quantity,"main_course");
-                    }
-                    else if(category == 2){
-                        productToAdd =new Product(productName, description, price, quantity,"desert");
-                    }
-                    else {
-                        productToAdd =new Product(productName, description, price, quantity,"drink");
-                    }
 
-                    productService.addProductInMenu(currentUser, restaurant,productToAdd);
+
+
                     break;
 
                 case 7:
@@ -309,6 +324,38 @@ public class MenuService {
                     System.out.println("Invalid option.");
             }
         }
+    }
+
+    private void addNewProduct(User currentUser){
+        System.out.println("\n---- Add a new product ----");
+        System.out.print("Name: ");
+        String productName = scanner.nextLine();
+        System.out.print("Description: ");
+        String description = scanner.nextLine();
+        double price = readDouble("Price: ");
+        int quantity = readInt("Quantity: ");
+        int category = readInt("Category: \n1.Main Course\n2.Desert\n3.Drink\nChoose category:");
+
+        restaurantService.showRestaurants();
+        Restaurant restaurant = chooseRestaurant();
+        if (restaurant == null) {
+            System.out.println("Invalid restaurant selected.");
+            return;
+        }
+
+        Product productToAdd;
+        if(category == 1){
+            productToAdd =new Product(productName, description, price, quantity,"main_course",true);
+        }
+        else if(category == 2){
+            productToAdd =new Product(productName, description, price, quantity,"desert",true);
+        }
+        else {
+            productToAdd =new Product(productName, description, price, quantity,"drink",true);
+        }
+
+        productService.addProductInMenu(currentUser, restaurant,productToAdd);
+
     }
 
 
@@ -486,7 +533,8 @@ public class MenuService {
                         original.getDescription(),
                         original.getPrice(),
                         quantity,
-                        original.getProductType()
+                        original.getProductType(),
+                        true
                 );
                 produsComandat.setId(original.getId());
                 produseComanda.add(produsComandat);

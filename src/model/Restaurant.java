@@ -74,16 +74,20 @@ public class Restaurant {
     public List<Product> showMenu() {
         List<Product> allProducts = productRepo.findAllByRestaurantId(this.id);
 
-        if(allProducts.isEmpty()){
+        List<Product> existingAvailableProducts = allProducts.stream().filter(p->p.isAvailable()).toList();
+
+        if (allProducts.isEmpty() || existingAvailableProducts.isEmpty()) {
             System.out.println("No products available");
             return Collections.emptyList();
         }
-        List<Product> displayedProducts =new ArrayList<>();
+
+        List<Product> displayedProducts = new ArrayList<>();
         int index = 0;
 
         System.out.println("\n---- Main Course ----");
-        for(Product p : allProducts){
-            if(p.getProductType().equalsIgnoreCase("main_course")){
+        for (Product p : allProducts) {
+            if (!p.isAvailable()) continue;
+            if (p.getProductType().equalsIgnoreCase("main_course")) {
                 System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
                 System.out.println(p.getDescription());
                 displayedProducts.add(p);
@@ -91,8 +95,9 @@ public class Restaurant {
         }
 
         System.out.println("\n---- Deserts ----");
-        for(Product p : allProducts){
-            if(p.getProductType().equalsIgnoreCase("desert")){
+        for (Product p : allProducts) {
+            if (!p.isAvailable()) continue;
+            if (p.getProductType().equalsIgnoreCase("desert")) {
                 System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
                 System.out.println(p.getDescription());
                 displayedProducts.add(p);
@@ -100,17 +105,18 @@ public class Restaurant {
         }
 
         System.out.println("\n---- Drinks ----");
-        for(Product p : allProducts){
-            if(p.getProductType().equalsIgnoreCase("drink")){
+        for (Product p : allProducts) {
+            if (!p.isAvailable()) continue;
+            if (p.getProductType().equalsIgnoreCase("drink")) {
                 System.out.println(++index + ". " + p.getName() + " - " + p.getPrice() + " lei");
                 System.out.println(p.getDescription());
                 displayedProducts.add(p);
             }
         }
 
-
-    return displayedProducts;
+        return displayedProducts;
     }
+
 
 
     @Override
