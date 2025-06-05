@@ -9,7 +9,7 @@ public class PaymentRepository extends GenericRepository<Payment>{
 
     private PaymentRepository(){}
 
-    public static synchronized PaymentRepository getInstance(){
+    public static synchronized PaymentRepository getInstance(){  //synchronized permite acceseul pe rand doar unui fir de executie(nu e necesar in aplicatia mea pt ca folosesc doar un thread).De exemplu, daca doua threaduri acceseaza metoda in acelasi timp vor vedea ca instance==null si ambele vor creea o instanta, ceea ce incalca principiul Singleton
         if(instance==null){
             instance = new PaymentRepository();
         }

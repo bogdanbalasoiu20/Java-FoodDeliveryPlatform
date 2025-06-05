@@ -38,7 +38,7 @@ public class OrderRepository extends GenericRepository<Order>{
         String sqlOrderProduct = "INSERT INTO order_product(order_id, product_id, quantity) VALUES (?, ?, ?)";
 
         try(Connection conn = DBConnection.getConnection()){
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false);  //nu vreau commit automat pentru a fi sigur ca toate operatiile se executa cu succes sau nu se executa niciuna
 
             try(PreparedStatement psOrder = conn.prepareStatement(sqlOrder,Statement.RETURN_GENERATED_KEYS)){
                 psOrder.setInt(1,order.getClient().getId());
@@ -63,11 +63,11 @@ public class OrderRepository extends GenericRepository<Order>{
                         psItem.executeBatch();
                     }
                 }
-                conn.commit();
+                conn.commit();  //salvez in bd definitiv toate oparatiile executate pana acum
                 System.out.println("Order saved successfully with ID: " + order.getId());
 
             }catch(SQLException e){
-                conn.rollback();
+                conn.rollback();  //daca apare o eroare anulez toate modificarile fcaute in bd
                 throw e;
             }
 
